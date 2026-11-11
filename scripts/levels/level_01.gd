@@ -54,6 +54,7 @@ const LIMIT_LEFT: float = 0.0
 const LIMIT_TOP: float = -300.0
 const LIMIT_RIGHT: float = 5560.0
 const LIMIT_BOTTOM: float = 200.0
+const TUTORIAL_END_X: float = 760.0 ## past the first Sky Skimmer encounter
 
 const HINT_SECONDS: float = 8.0 ## the control hint fades out after this much playing time
 
@@ -69,13 +70,11 @@ enum State { PLAYING, WON }
 @onready var _time_label: Label = get_node("VictoryUI/Center/Box/TimeLabel") as Label
 @onready var _restart_button: Button = get_node("VictoryUI/Center/Box/RestartButton") as Button
 @onready var _hint: Label = get_node("HudLayer/Hint") as Label
-@onready var _tutorial_key_label: Label = get_node("GrappleTutorialUI/Panel/Content/KeyRow/Keycap/E") as Label
-@onready var _tutorial_trigger: Area2D = get_node("GrappleTutorialTrigger") as Area2D
-@onready var _tutorial_ui: GrappleTutorial = get_node("GrappleTutorialUI") as GrappleTutorial
+@onready var _tutorial_ui: GrappleTutorial = get_node("GrappleTutorialSign") as GrappleTutorial
 
 var _state: State = State.PLAYING
 var _elapsed: float = 0.0
-var _tutorial_shown: bool = false
+var _tutorial_completed: bool = false
 var _controller_prompts: bool = false
 
 
@@ -87,7 +86,7 @@ func _ready() -> void:
 
 	_death_plane.body_entered.connect(_on_death)
 	_exit_area.body_entered.connect(_on_exit)
-	_tutorial_trigger.body_entered.connect(_on_tutorial_triggered)
+	_player.grapple_attached.connect(_on_first_grapple_attached)
 	_restart_button.pressed.connect(_restart)
 	_victory.visible = false
 	_update_control_prompts()
@@ -112,21 +111,21 @@ func _set_controller_prompts(controller: bool) -> void:
 
 
 func _update_control_prompts() -> void:
-	if _hint == null or _tutorial_ui == null or _tutorial_key_label == null:
+	if _hint == null or _tutorial_ui == null:
 		return
 	if _controller_prompts:
 		_hint.text = "LEFT STICK — MOVE     A — JUMP     RT — HOLD TO GRAPPLE     MENU — RESTART"
-		_tutorial_key_label.text = "RT"
 		_tutorial_ui.set_controller_prompts(true)
 	else:
 		_hint.text = "A / D  move     SPACE  jump     E  grapple (hold)     R  restart"
-		_tutorial_key_label.text = "E"
 		_tutorial_ui.set_controller_prompts(false)
 
 
 func _process(delta: float) -> void:
 	if _state == State.PLAYING:
 		_elapsed += delta
+		if not _tutorial_completed and _player.global_position.x >= TUTORIAL_END_X:
+			_complete_tutorial_sign()
 	if _hint.visible:
 		if _elapsed > HINT_SECONDS:
 			_hint.modulate.a = maxf(0.0, _hint.modulate.a - delta * 1.5)
@@ -179,9 +178,12 @@ func _on_exit(body: Node2D) -> void:
 	_victory.visible = true
 
 
-func _on_tutorial_triggered(body: Node2D) -> void:
-	if body != _player or _tutorial_shown:
+func _on_first_grapple_attached(_creature: Node2D) -> void:
+	_complete_tutorial_sign()
+
+
+func _complete_tutorial_sign() -> void:
+	if _tutorial_completed:
 		return
-	_tutorial_shown = true
-	_tutorial_trigger.set_deferred("monitoring", false)
-	_tutorial_ui.show_tutorial()
+	_tutorial_completed = true
+	_tutorial_ui.fade_out()

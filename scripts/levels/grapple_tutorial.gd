@@ -1,80 +1,48 @@
-extends CanvasLayer
+extends Node2D
 class_name GrappleTutorial
 
-const ACTION_CONFIRM := &"tutorial_confirm"
-const ACTION_RESTART := &"restart"
+@onready var _control: Label = get_node("Control") as Label
 
-var _pending_dismiss: bool = false
-var _waiting_for_confirm_release: bool = false
-@onready var _message: Label = get_node("Panel/Content/Message") as Label
-@onready var _continue: Button = get_node("Panel/Content/Continue") as Button
-@onready var _key_label: Label = get_node("Panel/Content/KeyRow/Keycap/E") as Label
-@onready var _hold_label: Label = get_node("Panel/Content/KeyRow/HoldLabel") as Label
+var _completed: bool = false
 
 
 func _ready() -> void:
-	_continue.pressed.connect(_on_continue_pressed)
-	visible = false
-
-
-func _exit_tree() -> void:
-	var scene_tree: SceneTree = get_tree()
-	if scene_tree != null:
-		scene_tree.paused = false
-
-
-func show_tutorial() -> void:
-	_pending_dismiss = false
-	_waiting_for_confirm_release = false
-	visible = true
-	get_tree().paused = true
-	_continue.grab_focus()
+	_control.text = "E — HOLD TO GRAPPLE"
 
 
 func set_controller_prompts(controller: bool) -> void:
-	_key_label.text = "RT" if controller else "E"
-	_hold_label.text = "— HOLD TO GRAPPLE"
-	_message.text = "Hold the trigger to grab a nearby Sky Skimmer\nand swing across the sky."
-	_continue.text = "CONTINUE"
-
-
-func _input(event: InputEvent) -> void:
-	if not visible:
+	if _completed:
 		return
-	if event is InputEventJoypadButton and event.is_pressed():
-		set_controller_prompts(true)
-	elif event is InputEventJoypadMotion and absf((event as InputEventJoypadMotion).axis_value) > 0.35:
-		set_controller_prompts(true)
-	elif event is InputEventKey and event.is_pressed() and not event.is_echo():
-		set_controller_prompts(false)
+	_control.text = "RT — HOLD TO GRAPPLE" if controller else "E — HOLD TO GRAPPLE"
 
-	if event.is_action_pressed(ACTION_RESTART):
-		get_viewport().set_input_as_handled()
-		get_tree().paused = false
-		get_tree().call_deferred("reload_current_scene")
+
+func fade_out() -> void:
+	if _completed:
 		return
-	if event.is_action_pressed(ACTION_CONFIRM):
-		_pending_dismiss = false
-		_waiting_for_confirm_release = true
-		get_viewport().set_input_as_handled()
-	elif _waiting_for_confirm_release and event.is_action_released(ACTION_CONFIRM):
-		_waiting_for_confirm_release = false
-		_pending_dismiss = true
-		get_viewport().set_input_as_handled()
+	_completed = true
+	var tween: Tween = create_tween()
+	tween.tween_property(self, "modulate:a", 0.0, 0.8)
+	tween.tween_callback(_hide_sign)
 
 
-func _on_continue_pressed() -> void:
-	_pending_dismiss = true
-	get_viewport().set_input_as_handled()
-
-
-func _process(_delta: float) -> void:
-	if not _pending_dismiss or _waiting_for_confirm_release or Input.is_action_pressed(ACTION_CONFIRM):
-		return
-	_pending_dismiss = false
-	_finish_tutorial()
-
-
-func _finish_tutorial() -> void:
+func _hide_sign() -> void:
 	visible = false
-	get_tree().paused = false
+
+
+func _draw() -> void:
+	# A short stone post ties the inscription to the starting island.
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(-5.0, 50.0), Vector2(5.0, 50.0),
+		Vector2(4.0, 96.0), Vector2(-4.0, 96.0),
+	]), Color(0.35, 0.28, 0.31, 1.0))
+	draw_line(Vector2(-2.0, 56.0), Vector2(-2.0, 93.0), Color(0.78, 0.57, 0.31, 1.0), 1.0)
+
+	var panel: Rect2 = Rect2(Vector2(-128.0, -58.0), Vector2(256.0, 112.0))
+	draw_rect(panel, Color(0.035, 0.055, 0.09, 0.94), true)
+	draw_rect(panel, Color(0.91, 0.65, 0.28, 1.0), false, 2.0)
+	draw_line(Vector2(-116.0, -27.0), Vector2(116.0, -27.0), Color(0.22, 0.72, 0.69, 0.9), 1.0)
+	# Small turquoise diamond gives the old marker a magical accent.
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(116.0, -49.0), Vector2(121.0, -44.0),
+		Vector2(116.0, -39.0), Vector2(111.0, -44.0),
+	]), Color(0.28, 0.86, 0.82, 1.0))

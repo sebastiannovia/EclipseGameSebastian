@@ -74,21 +74,6 @@ size = Vector2(96, 96)
 [sub_resource type="RectangleShape2D" id="RectDeathPlane"]
 size = Vector2(5800, 24)
 
-[sub_resource type="RectangleShape2D" id="RectTutorialTrigger"]
-size = Vector2(180, 100)
-
-[sub_resource type="StyleBoxFlat" id="TutorialPanelStyle"]
-bg_color = Color(0.055, 0.075, 0.12, 0.98)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.93, 0.68, 0.29, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
 [node name="Level_01" type="Node2D" unique_id=485609847]
 script = ExtResource("1_level")
 
@@ -466,90 +451,52 @@ position = Vector2(2700, 175)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeathPlane" unique_id=503849668]
 shape = SubResource("RectDeathPlane")
 
-[node name="GrappleTutorialTrigger" type="Area2D" parent="." unique_id=124649406]
-position = Vector2(407, -28)
-collision_layer = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="GrappleTutorialTrigger" unique_id=1721320473]
-position = Vector2(1, 0)
-shape = SubResource("RectTutorialTrigger")
-
-[node name="GrappleTutorialUI" type="CanvasLayer" parent="." unique_id=1522988834]
-process_mode = 2
-layer = 20
-visible = false
+[node name="GrappleTutorialSign" type="Node2D" parent="." unique_id=1549187665]
+z_index = 15
+texture_filter = 1
+position = Vector2(270, -100)
 script = ExtResource("7_tutorial")
 
-[node name="Panel" type="PanelContainer" parent="GrappleTutorialUI" unique_id=171046528]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -210.0
-offset_top = -126.0
-offset_right = 210.0
-offset_bottom = 126.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("TutorialPanelStyle")
-
-[node name="Content" type="VBoxContainer" parent="GrappleTutorialUI/Panel" unique_id=2108914732]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="Title" type="Label" parent="GrappleTutorialUI/Panel/Content" unique_id=1090401690]
-layout_mode = 2
+[node name="Title" type="Label" parent="GrappleTutorialSign" unique_id=554717701]
+offset_left = -118.0
+offset_top = -49.0
+offset_right = 118.0
+offset_bottom = -30.0
 theme_override_colors/font_color = Color(1, 0.82, 0.45, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 12
 text = "YOUR FIRST GRAPPLE"
 horizontal_alignment = 1
 
-[node name="Message" type="Label" parent="GrappleTutorialUI/Panel/Content" unique_id=397176047]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.96, 0.94, 1)
-theme_override_font_sizes/font_size = 13
-text = "Hold the trigger to grab a nearby Sky Skimmer
-and swing across the sky."
+[node name="Control" type="Label" parent="GrappleTutorialSign" unique_id=1410038493]
+offset_left = -118.0
+offset_top = -24.0
+offset_right = 118.0
+offset_bottom = -7.0
+theme_override_colors/font_color = Color(0.35, 0.94, 0.9, 1)
+theme_override_font_sizes/font_size = 10
+text = "E — HOLD TO GRAPPLE"
 horizontal_alignment = 1
 
-[node name="KeyRow" type="HBoxContainer" parent="GrappleTutorialUI/Panel/Content" unique_id=2044038385]
-layout_mode = 2
-theme_override_constants/separation = 14
-alignment = 1
-
-[node name="Keycap" type="PanelContainer" parent="GrappleTutorialUI/Panel/Content/KeyRow" unique_id=886072104]
-custom_minimum_size = Vector2(68, 52)
-layout_mode = 2
-
-[node name="E" type="Label" parent="GrappleTutorialUI/Panel/Content/KeyRow/Keycap" unique_id=2054321028]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.35, 0.94, 0.9, 1)
-theme_override_font_sizes/font_size = 32
-text = "E"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="HoldLabel" type="Label" parent="GrappleTutorialUI/Panel/Content/KeyRow" unique_id=383311708]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.35, 0.94, 0.9, 1)
-theme_override_font_sizes/font_size = 14
-text = "— HOLD TO GRAPPLE"
-
-[node name="ReleaseMessage" type="Label" parent="GrappleTutorialUI/Panel/Content" unique_id=207848275]
-layout_mode = 2
+[node name="Message" type="Label" parent="GrappleTutorialSign" unique_id=1774202934]
+offset_left = -119.0
+offset_top = -2.0
+offset_right = 117.0
+offset_bottom = 27.0
 theme_override_colors/font_color = Color(0.96, 0.96, 0.94, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 9
+text = "Grab a nearby Sky Skimmer and swing
+across the sky."
+horizontal_alignment = 1
+
+[node name="ReleaseMessage" type="Label" parent="GrappleTutorialSign" unique_id=827088776]
+offset_left = -118.0
+offset_top = 28.0
+offset_right = 118.0
+offset_bottom = 47.0
+theme_override_colors/font_color = Color(0.96, 0.96, 0.94, 1)
+theme_override_font_sizes/font_size = 8
 text = "Release to let go and keep your momentum."
 horizontal_alignment = 1
-
-[node name="Continue" type="Button" parent="GrappleTutorialUI/Panel/Content" unique_id=2060430919]
-custom_minimum_size = Vector2(120, 30)
-layout_mode = 2
-focus_mode = 2
-theme_override_colors/font_color = Color(1, 0.82, 0.45, 1)
-theme_override_font_sizes/font_size = 12
-text = "CONTINUE"
 
 [node name="Player" parent="." unique_id=488134938 instance=ExtResource("5_player")]
 position = Vector2(100, 0)
