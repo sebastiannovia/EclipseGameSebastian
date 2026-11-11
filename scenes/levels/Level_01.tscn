@@ -1,0 +1,617 @@
+[gd_scene format=3 uid="uid://dfh81mu1gu5yj"]
+
+[ext_resource type="Script" uid="uid://dnysc2rygn0i8" path="res://scripts/levels/level_01.gd" id="1_level"]
+[ext_resource type="Script" uid="uid://bjvh4ayku2ees" path="res://scripts/levels/float_island.gd" id="2_island"]
+[ext_resource type="Script" uid="uid://caijd4fw6tg32" path="res://scripts/levels/portal.gd" id="3_portal"]
+[ext_resource type="Script" uid="uid://dfd7sr5phdcyb" path="res://scripts/levels/background.gd" id="4_background"]
+[ext_resource type="PackedScene" path="res://scenes/player/Player.tscn" id="5_player"]
+[ext_resource type="PackedScene" path="res://scenes/objects/FlyingCreature.tscn" id="6_creature"]
+[ext_resource type="Script" uid="uid://dl6h1rmsvidwq" path="res://scripts/levels/grapple_tutorial.gd" id="7_tutorial"]
+
+[sub_resource type="RectangleShape2D" id="RectStart"]
+size = Vector2(340, 40)
+
+[sub_resource type="RectangleShape2D" id="RectMeadow"]
+size = Vector2(340, 40)
+
+[sub_resource type="RectangleShape2D" id="RectTerrace"]
+size = Vector2(200, 40)
+
+[sub_resource type="RectangleShape2D" id="RectAerie"]
+size = Vector2(119, 40)
+
+[sub_resource type="RectangleShape2D" id="RectPerch"]
+size = Vector2(160, 40)
+
+[sub_resource type="RectangleShape2D" id="RectRestLedge"]
+size = Vector2(266, 40)
+
+[sub_resource type="RectangleShape2D" id="RectStepOne"]
+size = Vector2(90, 40)
+
+[sub_resource type="RectangleShape2D" id="RectStepTwo"]
+size = Vector2(90, 40)
+
+[sub_resource type="RectangleShape2D" id="RectStepThree"]
+size = Vector2(90, 40)
+
+[sub_resource type="RectangleShape2D" id="RectNook"]
+size = Vector2(110, 40)
+
+[sub_resource type="RectangleShape2D" id="RectLowRest"]
+size = Vector2(130, 40)
+
+[sub_resource type="RectangleShape2D" id="RectShelf"]
+size = Vector2(130, 40)
+
+[sub_resource type="RectangleShape2D" id="RectNarrowA"]
+size = Vector2(110, 40)
+
+[sub_resource type="RectangleShape2D" id="RectNarrowB"]
+size = Vector2(100, 40)
+
+[sub_resource type="RectangleShape2D" id="RectExitIsland"]
+size = Vector2(160, 40)
+
+[sub_resource type="RectangleShape2D" id="RectRockStart"]
+size = Vector2(120, 50)
+
+[sub_resource type="RectangleShape2D" id="RectArch"]
+size = Vector2(180, 44)
+
+[sub_resource type="RectangleShape2D" id="RectRockA"]
+size = Vector2(200, 46)
+
+[sub_resource type="RectangleShape2D" id="RectRockB"]
+size = Vector2(260, 40)
+
+[sub_resource type="RectangleShape2D" id="RectRockC"]
+size = Vector2(40, 120)
+
+[sub_resource type="RectangleShape2D" id="RectExitTrigger"]
+size = Vector2(96, 96)
+
+[sub_resource type="RectangleShape2D" id="RectDeathPlane"]
+size = Vector2(5800, 24)
+
+[sub_resource type="RectangleShape2D" id="RectTutorialTrigger"]
+size = Vector2(180, 100)
+
+[sub_resource type="StyleBoxFlat" id="TutorialPanelStyle"]
+bg_color = Color(0.055, 0.075, 0.12, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.93, 0.68, 0.29, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Level_01" type="Node2D" unique_id=485609847]
+script = ExtResource("1_level")
+
+[node name="Background" type="Node2D" parent="." unique_id=1780891953]
+z_index = -20
+script = ExtResource("4_background")
+content_right = 5700.0
+
+[node name="Islands" type="Node2D" parent="." unique_id=1501210538]
+
+[node name="StartHaven" type="StaticBody2D" parent="Islands" unique_id=1885336030]
+position = Vector2(210, 20)
+script = ExtResource("2_island")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/StartHaven" unique_id=792913228]
+shape = SubResource("RectStart")
+
+[node name="Meadow" type="StaticBody2D" parent="Islands" unique_id=1458546077]
+position = Vector2(790, 20)
+script = ExtResource("2_island")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/Meadow" unique_id=1637623048]
+shape = SubResource("RectMeadow")
+
+[node name="Terrace" type="StaticBody2D" parent="Islands" unique_id=1935923185]
+position = Vector2(1340, -2)
+script = ExtResource("2_island")
+grass_color = Color(0.58, 0.56, 0.62, 1)
+grass_lit_color = Color(0.74, 0.72, 0.8, 1)
+dirt_color = Color(0.34, 0.28, 0.4, 1)
+dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
+dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
+skirt_depth = 14.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/Terrace" unique_id=1213596853]
+shape = SubResource("RectTerrace")
+
+[node name="Aerie" type="StaticBody2D" parent="Islands" unique_id=544873176]
+position = Vector2(1730, -20)
+script = ExtResource("2_island")
+grass_color = Color(0.66, 0.7, 0.34, 1)
+grass_lit_color = Color(0.85, 0.87, 0.52, 1)
+dirt_color = Color(0.4, 0.26, 0.36, 1)
+dirt_dark_color = Color(0.29, 0.18, 0.27, 1)
+dirt_lit_color = Color(0.51, 0.35, 0.45, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/Aerie" unique_id=399531046]
+position = Vector2(-166.5, 19)
+shape = SubResource("RectAerie")
+
+[node name="Perch" type="StaticBody2D" parent="Islands" unique_id=2047437917]
+position = Vector2(2140, -5)
+script = ExtResource("2_island")
+grass_color = Color(0.66, 0.7, 0.34, 1)
+grass_lit_color = Color(0.85, 0.87, 0.52, 1)
+dirt_color = Color(0.4, 0.26, 0.36, 1)
+dirt_dark_color = Color(0.29, 0.18, 0.27, 1)
+dirt_lit_color = Color(0.51, 0.35, 0.45, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/Perch" unique_id=1258218521]
+position = Vector2(-193, 6)
+shape = SubResource("RectPerch")
+
+[node name="RestLedge" type="StaticBody2D" parent="Islands" unique_id=623468902]
+position = Vector2(2600, 35)
+script = ExtResource("2_island")
+grass_color = Color(0.66, 0.7, 0.34, 1)
+grass_lit_color = Color(0.85, 0.87, 0.52, 1)
+dirt_color = Color(0.4, 0.26, 0.36, 1)
+dirt_dark_color = Color(0.29, 0.18, 0.27, 1)
+dirt_lit_color = Color(0.51, 0.35, 0.45, 1)
+skirt_depth = 26.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/RestLedge" unique_id=1817775212]
+position = Vector2(-273, -35)
+shape = SubResource("RectRestLedge")
+
+[node name="StepOne" type="StaticBody2D" parent="Islands" unique_id=48782975]
+position = Vector2(2572, 17)
+script = ExtResource("2_island")
+grass_color = Color(0.58, 0.56, 0.62, 1)
+grass_lit_color = Color(0.74, 0.72, 0.8, 1)
+dirt_color = Color(0.34, 0.28, 0.4, 1)
+dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
+dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
+skirt_depth = 12.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/StepOne" unique_id=1167519754]
+shape = SubResource("RectStepOne")
+
+[node name="StepTwo" type="StaticBody2D" parent="Islands" unique_id=1973340256]
+position = Vector2(2722, -8)
+script = ExtResource("2_island")
+grass_color = Color(0.58, 0.56, 0.62, 1)
+grass_lit_color = Color(0.74, 0.72, 0.8, 1)
+dirt_color = Color(0.34, 0.28, 0.4, 1)
+dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
+dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
+skirt_depth = 12.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/StepTwo" unique_id=1370235783]
+shape = SubResource("RectStepTwo")
+
+[node name="StepThree" type="StaticBody2D" parent="Islands" unique_id=505333369]
+position = Vector2(2872, -33)
+script = ExtResource("2_island")
+grass_color = Color(0.58, 0.56, 0.62, 1)
+grass_lit_color = Color(0.74, 0.72, 0.8, 1)
+dirt_color = Color(0.34, 0.28, 0.4, 1)
+dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
+dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
+skirt_depth = 12.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/StepThree" unique_id=857585837]
+shape = SubResource("RectStepThree")
+
+[node name="Nook" type="StaticBody2D" parent="Islands" unique_id=197995791]
+position = Vector2(3390, -15)
+script = ExtResource("2_island")
+grass_color = Color(0.44, 0.64, 0.48, 1)
+grass_lit_color = Color(0.62, 0.82, 0.62, 1)
+dirt_color = Color(0.28, 0.22, 0.38, 1)
+dirt_dark_color = Color(0.2, 0.15, 0.28, 1)
+dirt_lit_color = Color(0.37, 0.3, 0.48, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/Nook" unique_id=1303251704]
+position = Vector2(-39, -15)
+shape = SubResource("RectNook")
+
+[node name="LowRest" type="StaticBody2D" parent="Islands" unique_id=1836231762]
+position = Vector2(3720, 60)
+script = ExtResource("2_island")
+grass_color = Color(0.44, 0.64, 0.48, 1)
+grass_lit_color = Color(0.62, 0.82, 0.62, 1)
+dirt_color = Color(0.28, 0.22, 0.38, 1)
+dirt_dark_color = Color(0.2, 0.15, 0.28, 1)
+dirt_lit_color = Color(0.37, 0.3, 0.48, 1)
+skirt_depth = 40.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/LowRest" unique_id=12936866]
+shape = SubResource("RectLowRest")
+
+[node name="Shelf" type="StaticBody2D" parent="Islands" unique_id=790284446]
+position = Vector2(4080, 40)
+script = ExtResource("2_island")
+grass_color = Color(0.44, 0.64, 0.48, 1)
+grass_lit_color = Color(0.62, 0.82, 0.62, 1)
+dirt_color = Color(0.28, 0.22, 0.38, 1)
+dirt_dark_color = Color(0.2, 0.15, 0.28, 1)
+dirt_lit_color = Color(0.37, 0.3, 0.48, 1)
+skirt_depth = 24.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/Shelf" unique_id=1913105956]
+shape = SubResource("RectShelf")
+
+[node name="NarrowA" type="StaticBody2D" parent="Islands" unique_id=661107524]
+position = Vector2(4520, 10)
+script = ExtResource("2_island")
+grass_color = Color(0.76, 0.62, 0.36, 1)
+grass_lit_color = Color(0.93, 0.8, 0.55, 1)
+dirt_color = Color(0.38, 0.24, 0.3, 1)
+dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
+dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/NarrowA" unique_id=948682340]
+shape = SubResource("RectNarrowA")
+
+[node name="NarrowB" type="StaticBody2D" parent="Islands" unique_id=2077687835]
+position = Vector2(4930, -15)
+script = ExtResource("2_island")
+grass_color = Color(0.76, 0.62, 0.36, 1)
+grass_lit_color = Color(0.93, 0.8, 0.55, 1)
+dirt_color = Color(0.38, 0.24, 0.3, 1)
+dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
+dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/NarrowB" unique_id=312443778]
+shape = SubResource("RectNarrowB")
+
+[node name="ExitIsland" type="StaticBody2D" parent="Islands" unique_id=568461412]
+position = Vector2(5360, -55)
+script = ExtResource("2_island")
+grass_color = Color(0.76, 0.62, 0.36, 1)
+grass_lit_color = Color(0.93, 0.8, 0.55, 1)
+dirt_color = Color(0.38, 0.24, 0.3, 1)
+dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
+dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
+skirt_depth = 30.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/ExitIsland" unique_id=1803746209]
+shape = SubResource("RectExitIsland")
+
+[node name="Formations" type="Node2D" parent="." unique_id=45317983]
+
+[node name="RockStart" type="StaticBody2D" parent="Formations" unique_id=2033501881]
+position = Vector2(250, 140)
+script = ExtResource("2_island")
+grass_color = Color(0.58, 0.56, 0.62, 1)
+grass_lit_color = Color(0.72, 0.7, 0.78, 1)
+dirt_color = Color(0.32, 0.26, 0.4, 1)
+dirt_dark_color = Color(0.22, 0.18, 0.3, 1)
+dirt_lit_color = Color(0.42, 0.36, 0.52, 1)
+skirt_depth = 10.0
+grass_thickness = 4.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Formations/RockStart" unique_id=113611572]
+shape = SubResource("RectRockStart")
+
+[node name="RockArch" type="StaticBody2D" parent="Formations" unique_id=620367222]
+position = Vector2(1150, -200)
+script = ExtResource("2_island")
+grass_color = Color(0.62, 0.6, 0.7, 1)
+grass_lit_color = Color(0.78, 0.76, 0.86, 1)
+dirt_color = Color(0.34, 0.3, 0.44, 1)
+dirt_dark_color = Color(0.24, 0.21, 0.32, 1)
+dirt_lit_color = Color(0.44, 0.4, 0.54, 1)
+skirt_depth = 16.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Formations/RockArch" unique_id=1318129952]
+shape = SubResource("RectArch")
+
+[node name="RockGateA" type="StaticBody2D" parent="Formations" unique_id=2019537733]
+position = Vector2(2100, -215)
+script = ExtResource("2_island")
+grass_color = Color(0.62, 0.6, 0.7, 1)
+grass_lit_color = Color(0.78, 0.76, 0.86, 1)
+dirt_color = Color(0.34, 0.3, 0.44, 1)
+dirt_dark_color = Color(0.24, 0.21, 0.32, 1)
+dirt_lit_color = Color(0.44, 0.4, 0.54, 1)
+skirt_depth = 14.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Formations/RockGateA" unique_id=1900335231]
+shape = SubResource("RectRockA")
+
+[node name="RockCeiling" type="StaticBody2D" parent="Formations" unique_id=556113073]
+position = Vector2(4030, -140)
+script = ExtResource("2_island")
+grass_color = Color(0.62, 0.6, 0.7, 1)
+grass_lit_color = Color(0.78, 0.76, 0.86, 1)
+dirt_color = Color(0.34, 0.3, 0.44, 1)
+dirt_dark_color = Color(0.24, 0.21, 0.32, 1)
+dirt_lit_color = Color(0.44, 0.4, 0.54, 1)
+skirt_depth = 16.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Formations/RockCeiling" unique_id=1862058234]
+shape = SubResource("RectRockB")
+
+[node name="RockColumn" type="StaticBody2D" parent="Formations" unique_id=2032184682]
+position = Vector2(5500, -30)
+script = ExtResource("2_island")
+grass_color = Color(0.62, 0.6, 0.7, 1)
+grass_lit_color = Color(0.78, 0.76, 0.86, 1)
+dirt_color = Color(0.34, 0.3, 0.44, 1)
+dirt_dark_color = Color(0.24, 0.21, 0.32, 1)
+dirt_lit_color = Color(0.44, 0.4, 0.54, 1)
+skirt_depth = 12.0
+grass_thickness = 4.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Formations/RockColumn" unique_id=744485043]
+shape = SubResource("RectRockC")
+
+[node name="Creatures" type="Node2D" parent="." unique_id=677510906]
+
+[node name="Creature1" parent="Creatures" unique_id=891774234 instance=ExtResource("6_creature")]
+position = Vector2(540, -112)
+patrol_amplitude = 12.0
+patrol_period = 5.5
+bob_amplitude = 4.0
+bob_period = 3.2
+
+[node name="Creature2" parent="Creatures" unique_id=925723999 instance=ExtResource("6_creature")]
+position = Vector2(1140, -118)
+patrol_amplitude = 20.0
+patrol_period = 4.6
+bob_period = 3.0
+phase = 0.35
+
+[node name="Creature4" parent="Creatures" unique_id=329800034 instance=ExtResource("6_creature")]
+position = Vector2(1748, -117)
+patrol_amplitude = 50.0
+bob_amplitude = 10.0
+bob_period = 3.2
+phase = 0.45
+
+[node name="Creature5" parent="Creatures" unique_id=699353279 instance=ExtResource("6_creature")]
+position = Vector2(2107, -159)
+patrol_amplitude = 40.0
+patrol_period = 3.4
+bob_amplitude = 10.0
+bob_period = 2.4
+phase = 0.6
+
+[node name="Creature6" parent="Creatures" unique_id=2104835260 instance=ExtResource("6_creature")]
+position = Vector2(3108, -186)
+patrol_amplitude = 14.0
+patrol_period = 5.0
+bob_amplitude = 22.0
+bob_period = 3.4
+phase = 0.2
+
+[node name="Creature7" parent="Creatures" unique_id=924235109 instance=ExtResource("6_creature")]
+position = Vector2(3580, -108)
+patrol_amplitude = 30.0
+patrol_period = 3.4
+bob_amplitude = 12.0
+bob_period = 2.6
+phase = 0.5
+
+[node name="Creature8" parent="Creatures" unique_id=192994775 instance=ExtResource("6_creature")]
+position = Vector2(3950, -78)
+patrol_amplitude = 20.0
+patrol_period = 3.2
+bob_amplitude = 14.0
+phase = 0.3
+
+[node name="Creature9" parent="Creatures" unique_id=1563624063 instance=ExtResource("6_creature")]
+position = Vector2(4305, -111)
+patrol_amplitude = 20.0
+patrol_period = 4.2
+bob_amplitude = 12.0
+bob_period = 3.0
+phase = 0.65
+
+[node name="Creature10" parent="Creatures" unique_id=1910211895 instance=ExtResource("6_creature")]
+position = Vector2(4737, -138)
+patrol_amplitude = 32.0
+patrol_period = 3.8
+bob_period = 2.8
+phase = 0.2
+
+[node name="Creature11" parent="Creatures" unique_id=1491831960 instance=ExtResource("6_creature")]
+position = Vector2(5131, -153)
+patrol_amplitude = 28.0
+patrol_period = 3.2
+bob_amplitude = 10.0
+bob_period = 2.4
+phase = 0.5
+
+[node name="EntrancePortal" type="Node2D" parent="." unique_id=561447308]
+z_index = 1
+position = Vector2(100, 0)
+script = ExtResource("3_portal")
+radii = Vector2(28, 38)
+spin_speed = 1.2
+
+[node name="ExitPortal" type="Node2D" parent="." unique_id=1074482002]
+z_index = 1
+position = Vector2(5360, -75)
+script = ExtResource("3_portal")
+radii = Vector2(38, 50)
+outer_color = Color(0.72, 0.3, 0.08, 1)
+mid_color = Color(1, 0.54, 0.14, 1)
+inner_color = Color(1, 0.76, 0.36, 1)
+core_color = Color(1, 0.96, 0.82, 1)
+spark_color = Color(1, 0.88, 0.62, 1)
+spin_speed = 1.9
+pulse_speed = 2.8
+
+[node name="Area2D" type="Area2D" parent="ExitPortal" unique_id=1851991694]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitPortal/Area2D" unique_id=1194881242]
+position = Vector2(0, -48)
+shape = SubResource("RectExitTrigger")
+
+[node name="DeathPlane" type="Area2D" parent="." unique_id=226928127]
+position = Vector2(2700, 175)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeathPlane" unique_id=503849668]
+shape = SubResource("RectDeathPlane")
+
+[node name="GrappleTutorialTrigger" type="Area2D" parent="." unique_id=124649406]
+position = Vector2(407, -28)
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GrappleTutorialTrigger" unique_id=1721320473]
+position = Vector2(1, 0)
+shape = SubResource("RectTutorialTrigger")
+
+[node name="GrappleTutorialUI" type="CanvasLayer" parent="." unique_id=1522988834]
+process_mode = 2
+layer = 20
+visible = false
+script = ExtResource("7_tutorial")
+
+[node name="Panel" type="PanelContainer" parent="GrappleTutorialUI" unique_id=171046528]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -126.0
+offset_right = 210.0
+offset_bottom = 126.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("TutorialPanelStyle")
+
+[node name="Content" type="VBoxContainer" parent="GrappleTutorialUI/Panel" unique_id=2108914732]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="GrappleTutorialUI/Panel/Content" unique_id=1090401690]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.45, 1)
+theme_override_font_sizes/font_size = 18
+text = "YOUR FIRST GRAPPLE"
+horizontal_alignment = 1
+
+[node name="Message" type="Label" parent="GrappleTutorialUI/Panel/Content" unique_id=397176047]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.94, 1)
+theme_override_font_sizes/font_size = 13
+text = "Hold the trigger to grab a nearby Sky Skimmer
+and swing across the sky."
+horizontal_alignment = 1
+
+[node name="KeyRow" type="HBoxContainer" parent="GrappleTutorialUI/Panel/Content" unique_id=2044038385]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Keycap" type="PanelContainer" parent="GrappleTutorialUI/Panel/Content/KeyRow" unique_id=886072104]
+custom_minimum_size = Vector2(68, 52)
+layout_mode = 2
+
+[node name="E" type="Label" parent="GrappleTutorialUI/Panel/Content/KeyRow/Keycap" unique_id=2054321028]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.94, 0.9, 1)
+theme_override_font_sizes/font_size = 32
+text = "E"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HoldLabel" type="Label" parent="GrappleTutorialUI/Panel/Content/KeyRow" unique_id=383311708]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.94, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "— HOLD TO GRAPPLE"
+
+[node name="ReleaseMessage" type="Label" parent="GrappleTutorialUI/Panel/Content" unique_id=207848275]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.94, 1)
+theme_override_font_sizes/font_size = 12
+text = "Release to let go and keep your momentum."
+horizontal_alignment = 1
+
+[node name="Continue" type="Button" parent="GrappleTutorialUI/Panel/Content" unique_id=2060430919]
+custom_minimum_size = Vector2(120, 30)
+layout_mode = 2
+focus_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.45, 1)
+theme_override_font_sizes/font_size = 12
+text = "CONTINUE"
+
+[node name="Player" parent="." unique_id=488134938 instance=ExtResource("5_player")]
+position = Vector2(100, 0)
+
+[node name="HudLayer" type="CanvasLayer" parent="." unique_id=208181902]
+layer = 5
+
+[node name="Hint" type="Label" parent="HudLayer" unique_id=515431898]
+modulate = Color(1, 0.93, 0.78, 0.8)
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -24.0
+offset_right = 630.0
+offset_bottom = -8.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 10
+text = "A / D  move     SPACE  jump     E  grapple (hold)     R  restart"
+
+[node name="VictoryUI" type="CanvasLayer" parent="." unique_id=896066865]
+layer = 10
+visible = false
+
+[node name="Dim" type="ColorRect" parent="VictoryUI" unique_id=783599382]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.11, 0.07, 0.17, 0.62)
+
+[node name="Center" type="CenterContainer" parent="VictoryUI" unique_id=166282631]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Box" type="VBoxContainer" parent="VictoryUI/Center" unique_id=279816654]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VictoryUI/Center/Box" unique_id=1269519933]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.55, 1)
+theme_override_font_sizes/font_size = 24
+text = "LEVEL COMPLETE"
+horizontal_alignment = 1
+
+[node name="TimeLabel" type="Label" parent="VictoryUI/Center/Box" unique_id=1518051147]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.88, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "Time  0.0 s"
+horizontal_alignment = 1
+
+[node name="Gap" type="Control" parent="VictoryUI/Center/Box" unique_id=1014264709]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="RestartButton" type="Button" parent="VictoryUI/Center/Box" unique_id=1832180011]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Play again   ( R )"

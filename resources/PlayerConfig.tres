@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="PlayerConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player_config.gd" id="1_config"]
+
+[resource]
+script = ExtResource("1_config")
+max_speed = 150.0
+acceleration = 1200.0
+deceleration = 1600.0
+gravity = 900.0
+jump_velocity = -300.0
+max_fall_speed = 420.0
+jump_cut_multiplier = 0.45
+coyote_time = 0.1
+jump_buffer_time = 0.1
+grapple_range = 160.0
+min_rope_length = 45.0
+swing_push = 900.0
+swing_max_speed = 420.0

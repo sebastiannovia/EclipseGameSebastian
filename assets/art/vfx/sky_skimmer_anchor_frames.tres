@@ -1,0 +1,44 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://b3c5dd14imqbw"]
+
+[ext_resource type="Texture2D" uid="uid://cyac02tjudxdh" path="res://assets/art/vfx/sky_skimmer_anchor_fx.png" id="1_mj4ag"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chnc5"]
+atlas = ExtResource("1_mj4ag")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8hwi7"]
+atlas = ExtResource("1_mj4ag")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kmrf3"]
+atlas = ExtResource("1_mj4ag")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v1j0i"]
+atlas = ExtResource("1_mj4ag")
+region = Rect2(144, 0, 48, 48)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chnc5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8hwi7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kmrf3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v1j0i")
+}],
+"loop": 1,
+"name": &"anchor",
+"speed": 10.0
+}, {
+"frames": [],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]

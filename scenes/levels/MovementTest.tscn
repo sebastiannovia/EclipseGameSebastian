@@ -1,0 +1,123 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player/Player.tscn" id="1_player"]
+
+; ---------------------------------------------------------------------------
+; Movement test bench. Collision geometry only: no sprites, no tiles, no art.
+;
+; Convention: every platform body is 40 px thick, so a platform whose walking
+; surface is at y = T has its StaticBody2D at (centre_x, T + 20).
+; The player uses a feet origin (12 x 20 box centred at y = -10), so standing
+; on a surface means player.y == T, and its box spans x-6 .. x+6.
+;
+; Reachability from res://resources/PlayerConfig.tres (max_speed 150,
+; jump_velocity -300, gravity 900, max_fall_speed 420):
+;   continuous jump height   = 300^2 / (2 * 900)  = 50 px
+;   measured peak at 60 ticks/s                   = 52.5 px (discrete overshoot)
+;   air time, same height    = 2 * 300 / 900      = 0.667 s -> 100 px of reach
+;   reach while climbing 36 px = 0.510 s           = 76.5 px
+;   reach while falling 126 px = 0.959 s           = 143.8 px
+; Layout, left to right (edge to edge distances):
+;   StartIsland -> IslandGap1   48 px              small gap
+;   IslandGap1  -> IslandStepUp 24 px + 36 px up   step onto a higher island
+;   IslandStepUp-> IslandGap2   70 px              needs a full jump at speed
+;   IslandGap2  -> IslandGap3   84 px              the hard gap, 16 px of slack
+;   IslandGap3  -> IslandLanding 64 px + 126 px down  long fall, clamped by max_fall_speed
+;   LowCeiling  spans x 1780..2000, y -4..36, above IslandLanding (surface y 90).
+;               A standing player's head is at y 70, so the walkable headroom is
+;               34 px: a held jump bonks the slab, a tapped jump passes under it.
+; SafetyNet at y 240 catches every miss across the whole bench; WallLeft and
+; WallRight close off both ends so nothing falls forever.
+; ---------------------------------------------------------------------------
+
+[sub_resource type="RectangleShape2D" id="RectStartIsland"]
+size = Vector2(600, 40)
+
+[sub_resource type="RectangleShape2D" id="RectIslandGap1"]
+size = Vector2(200, 40)
+
+[sub_resource type="RectangleShape2D" id="RectIslandStepUp"]
+size = Vector2(160, 40)
+
+[sub_resource type="RectangleShape2D" id="RectIslandGap2"]
+size = Vector2(200, 40)
+
+[sub_resource type="RectangleShape2D" id="RectIslandGap3"]
+size = Vector2(200, 40)
+
+[sub_resource type="RectangleShape2D" id="RectIslandLanding"]
+size = Vector2(450, 40)
+
+[sub_resource type="RectangleShape2D" id="RectLowCeiling"]
+size = Vector2(220, 40)
+
+[sub_resource type="RectangleShape2D" id="RectSafetyNet"]
+size = Vector2(2540, 40)
+
+[sub_resource type="RectangleShape2D" id="RectWall"]
+size = Vector2(40, 480)
+
+[node name="MovementTest" type="Node2D"]
+
+[node name="StartIsland" type="StaticBody2D" parent="."]
+position = Vector2(300, 20)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StartIsland"]
+shape = SubResource("RectStartIsland")
+
+[node name="IslandGap1" type="StaticBody2D" parent="."]
+position = Vector2(748, 20)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="IslandGap1"]
+shape = SubResource("RectIslandGap1")
+
+[node name="IslandStepUp" type="StaticBody2D" parent="."]
+position = Vector2(952, -16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="IslandStepUp"]
+shape = SubResource("RectIslandStepUp")
+
+[node name="IslandGap2" type="StaticBody2D" parent="."]
+position = Vector2(1202, -16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="IslandGap2"]
+shape = SubResource("RectIslandGap2")
+
+[node name="IslandGap3" type="StaticBody2D" parent="."]
+position = Vector2(1486, -16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="IslandGap3"]
+shape = SubResource("RectIslandGap3")
+
+[node name="IslandLanding" type="StaticBody2D" parent="."]
+position = Vector2(1875, 110)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="IslandLanding"]
+shape = SubResource("RectIslandLanding")
+
+[node name="LowCeiling" type="StaticBody2D" parent="."]
+position = Vector2(1890, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LowCeiling"]
+shape = SubResource("RectLowCeiling")
+
+[node name="SafetyNet" type="StaticBody2D" parent="."]
+position = Vector2(830, 260)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SafetyNet"]
+shape = SubResource("RectSafetyNet")
+
+[node name="WallLeft" type="StaticBody2D" parent="."]
+position = Vector2(-420, 40)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft"]
+shape = SubResource("RectWall")
+
+[node name="WallRight" type="StaticBody2D" parent="."]
+position = Vector2(2120, 40)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
+shape = SubResource("RectWall")
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector2(60, -4)

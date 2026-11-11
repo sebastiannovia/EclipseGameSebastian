@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player.gd" id="1_player"]
+[ext_resource type="Resource" path="res://resources/PlayerConfig.tres" id="2_config"]
+[ext_resource type="Script" path="res://scripts/player/player_visuals.gd" id="3_visuals"]
+[ext_resource type="Script" path="res://scripts/player/player_rope.gd" id="4_rope"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(12, 20)
+
+[node name="Player" type="CharacterBody2D"]
+collision_mask = 5
+script = ExtResource("1_player")
+config = ExtResource("2_config")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -10)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Rope" type="Node2D" parent="."]
+z_index = 6
+script = ExtResource("4_rope")
+
+[node name="Visuals" type="Node2D" parent="."]
+z_index = 10
+script = ExtResource("3_visuals")
+
+[node name="Body" type="Polygon2D" parent="Visuals"]
+z_index = 1
+color = Color(0.96, 0.94, 0.9, 1)
+polygon = PackedVector2Array(-6, -20, 3, -20, 6, -16, 6, -4, 3, 0, -4, 0, -6, -4)
+
+[node name="Visor" type="Polygon2D" parent="Visuals"]
+z_index = 2
+color = Color(1, 0.55, 0.24, 1)
+polygon = PackedVector2Array(0, -17, 6, -14.5, 6, -10, 0, -9)
+
+[node name="Core" type="Polygon2D" parent="Visuals"]
+z_index = 2
+color = Color(1, 0.7, 0.36, 1)
+polygon = PackedVector2Array(-0.5, -8, 2.5, -5.5, -0.5, -3, -3.5, -5.5)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(0, -12)
