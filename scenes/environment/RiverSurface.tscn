@@ -1,0 +1,55 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/background/parallax_v3/waterfall/river_surface_8f_64x16.png" id="1_river"]
+
+[sub_resource type="AtlasTexture" id="RiverAtlas0"]
+atlas = ExtResource("1_river")
+region = Rect2(0, 0, 64, 16)
+
+[sub_resource type="AtlasTexture" id="RiverAtlas1"]
+atlas = ExtResource("1_river")
+region = Rect2(64, 0, 64, 16)
+
+[sub_resource type="AtlasTexture" id="RiverAtlas2"]
+atlas = ExtResource("1_river")
+region = Rect2(128, 0, 64, 16)
+
+[sub_resource type="AtlasTexture" id="RiverAtlas3"]
+atlas = ExtResource("1_river")
+region = Rect2(192, 0, 64, 16)
+
+[sub_resource type="AtlasTexture" id="RiverAtlas4"]
+atlas = ExtResource("1_river")
+region = Rect2(256, 0, 64, 16)
+
+[sub_resource type="AtlasTexture" id="RiverAtlas5"]
+atlas = ExtResource("1_river")
+region = Rect2(320, 0, 64, 16)
+
+[sub_resource type="AtlasTexture" id="RiverAtlas6"]
+atlas = ExtResource("1_river")
+region = Rect2(384, 0, 64, 16)
+
+[sub_resource type="AtlasTexture" id="RiverAtlas7"]
+atlas = ExtResource("1_river")
+region = Rect2(448, 0, 64, 16)
+
+[sub_resource type="SpriteFrames" id="RiverFrames"]
+animations = [{
+"frames": [{ "duration": 1.0, "texture": SubResource("RiverAtlas0") }, { "duration": 1.0, "texture": SubResource("RiverAtlas1") }, { "duration": 1.0, "texture": SubResource("RiverAtlas2") }, { "duration": 1.0, "texture": SubResource("RiverAtlas3") }, { "duration": 1.0, "texture": SubResource("RiverAtlas4") }, { "duration": 1.0, "texture": SubResource("RiverAtlas5") }, { "duration": 1.0, "texture": SubResource("RiverAtlas6") }, { "duration": 1.0, "texture": SubResource("RiverAtlas7") }],
+"loop": true,
+"name": &"flow",
+"speed": 8.0
+}]
+
+[node name="RiverSurface" type="Node2D"]
+z_index = 1
+
+[node name="Current" type="AnimatedSprite2D" parent="."]
+modulate = Color(1, 1, 1, 1)
+sprite_frames = SubResource("RiverFrames")
+autoplay = &"flow"
+animation = &"flow"
+playing = true
+texture_filter = 1
+texture_repeat = 1

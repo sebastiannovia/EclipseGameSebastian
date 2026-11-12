@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/objects/special_coin.gd" id="1_special_coin"]
+[ext_resource type="Texture2D" path="res://assets/art/collectibles/special_coin_v1/game_scale_40/special_coin_spin_8f_40x40.png" id="2_special_coin_sheet"]
 
 [sub_resource type="CircleShape2D" id="SpecialCoinPickupShape"]
 radius = 15.0
@@ -10,6 +11,14 @@ collision_layer = 0
 collision_mask = 1
 texture_filter = 0
 script = ExtResource("1_special_coin")
+
+[node name="Artwork" type="Sprite2D" parent="."]
+texture_filter = 1
+texture_repeat = 1
+texture = ExtResource("2_special_coin_sheet")
+hframes = 8
+vframes = 1
+frame = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("SpecialCoinPickupShape")

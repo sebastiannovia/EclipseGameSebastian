@@ -37,28 +37,38 @@ func _ready() -> void:
 	_half_size = rect.size * 0.5
 	_shape_offset = shape_node.position
 
-	# Platform artwork is fitted to the existing collision width and top edge.
-	# The collision shape and its transform remain the source of truth.
+	# Only walkable islands get the new grass art. Formation bodies keep their
+	# existing procedural stone rendering below.
 	if get_parent() == null or get_parent().name != "Islands":
 		return
-	var texture_path := "res://assets/art/final_pack/STRATOS_Art_Assets/terrain/platform_small.png"
-	if rect.size.x >= 250.0:
-		texture_path = "res://assets/art/final_pack/STRATOS_Art_Assets/terrain/platform_large.png"
-	elif rect.size.x >= 140.0:
-		texture_path = "res://assets/art/final_pack/STRATOS_Art_Assets/terrain/platform_medium.png"
+
+	var texture_path: String = "res://assets/art/grass_platforms_v1/game_scale/platform_grass_small.png"
+	var visible_surface_row: float = 10.0
+	if rect.size.x >= 240.0:
+		texture_path = "res://assets/art/grass_platforms_v1/game_scale/platform_grass_long.png"
+		visible_surface_row = 22.0
+	elif rect.size.x >= 110.0:
+		texture_path = "res://assets/art/grass_platforms_v1/game_scale/platform_grass_medium.png"
+		visible_surface_row = 22.0
+
+	var texture: Texture2D = load(texture_path) as Texture2D
+	if texture == null:
+		push_warning("%s could not load its grass platform texture." % name)
+		return
+
 	var sprite := Sprite2D.new()
 	sprite.name = "PlatformArtwork"
-	sprite.texture = load(texture_path) as Texture2D
+	sprite.texture = texture
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
 	sprite.centered = true
-	var texture_size: Vector2 = sprite.texture.get_size()
-	sprite.scale = Vector2(rect.size.x / texture_size.x, 1.0)
-	# All supplied platform prefabs put the grass surface seven pixels below the image top.
-	# Align the first visible grass row with the collision top for each texture
-	# height and each existing rectangle height.
-	var visible_surface_row: float = 7.0
-	var artwork_top_offset: float = (texture_size.y - rect.size.y) * 0.5 - visible_surface_row
-	sprite.position = shape_node.position + Vector2(0.0, artwork_top_offset)
+	var uniform_scale: float = rect.size.x / float(texture.get_width())
+	sprite.scale = Vector2.ONE * uniform_scale
+	# The supplied sprites include plants and stones above the flat grass plane.
+	# Align that plane, rather than the image's topmost decorative pixel, to the
+	# collision's upper edge. Keep the scale uniform so the art is not distorted.
+	var surface_offset_y: float = uniform_scale * (float(texture.get_height()) * 0.5 - visible_surface_row)
+	sprite.position = shape_node.position + Vector2(0.0, -rect.size.y * 0.5 + surface_offset_y)
 	sprite.z_index = -1
 	add_child(sprite)
 

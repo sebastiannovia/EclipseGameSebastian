@@ -111,8 +111,8 @@ func add_special_collectibles(amount: int) -> void:
 
 
 func _update_collectible_hud() -> void:
-	_coin_count_label.text = "%d" % _coin_count
-	_special_count_label.text = "%d" % _special_coin_count
+	_coin_count_label.text = "× %03d" % _coin_count
+	_special_count_label.text = "× %03d" % _special_coin_count
 
 
 func _input(event: InputEvent) -> void:

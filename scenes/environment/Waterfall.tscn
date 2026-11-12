@@ -1,0 +1,57 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/environment/waterfall.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/background/stratos_v4/waterfall/waterfall_loop_8f_64x256.png" id="2_sheet"]
+
+[sub_resource type="AtlasTexture" id="WaterfallFrame00"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 0, 64, 256)
+
+[sub_resource type="AtlasTexture" id="WaterfallFrame01"]
+atlas = ExtResource("2_sheet")
+region = Rect2(64, 0, 64, 256)
+
+[sub_resource type="AtlasTexture" id="WaterfallFrame02"]
+atlas = ExtResource("2_sheet")
+region = Rect2(128, 0, 64, 256)
+
+[sub_resource type="AtlasTexture" id="WaterfallFrame03"]
+atlas = ExtResource("2_sheet")
+region = Rect2(192, 0, 64, 256)
+
+[sub_resource type="AtlasTexture" id="WaterfallFrame04"]
+atlas = ExtResource("2_sheet")
+region = Rect2(256, 0, 64, 256)
+
+[sub_resource type="AtlasTexture" id="WaterfallFrame05"]
+atlas = ExtResource("2_sheet")
+region = Rect2(320, 0, 64, 256)
+
+[sub_resource type="AtlasTexture" id="WaterfallFrame06"]
+atlas = ExtResource("2_sheet")
+region = Rect2(384, 0, 64, 256)
+
+[sub_resource type="AtlasTexture" id="WaterfallFrame07"]
+atlas = ExtResource("2_sheet")
+region = Rect2(448, 0, 64, 256)
+
+[sub_resource type="SpriteFrames" id="WaterfallFrames"]
+animations = [{
+"frames": [{ "duration": 1.0, "texture": SubResource("WaterfallFrame00") }, { "duration": 1.0, "texture": SubResource("WaterfallFrame01") }, { "duration": 1.0, "texture": SubResource("WaterfallFrame02") }, { "duration": 1.0, "texture": SubResource("WaterfallFrame03") }, { "duration": 1.0, "texture": SubResource("WaterfallFrame04") }, { "duration": 1.0, "texture": SubResource("WaterfallFrame05") }, { "duration": 1.0, "texture": SubResource("WaterfallFrame06") }, { "duration": 1.0, "texture": SubResource("WaterfallFrame07") }],
+"loop": true,
+"name": &"flow",
+"speed": 8.0
+}]
+
+[node name="Waterfall" type="Node2D"]
+z_index = 1
+script = ExtResource("1_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("WaterfallFrames")
+autoplay = &"flow"
+animation = &"flow"
+playing = true
+texture_filter = 1
+texture_repeat = 1
+

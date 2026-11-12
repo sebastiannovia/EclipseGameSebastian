@@ -8,8 +8,10 @@ class_name CoinPickup
 
 const TRACKER_GROUP: StringName = &"collectible_tracker"
 const PICKUP_DURATION: float = 0.38
+const NORMAL_COIN_FRAME_COUNT: int = 8
 
 @onready var _collision: CollisionShape2D = get_node_or_null("CollisionShape2D") as CollisionShape2D
+@onready var _artwork: Sprite2D = get_node_or_null("Artwork") as Sprite2D
 
 var _home_position: Vector2 = Vector2.ZERO
 var _elapsed: float = 0.0
@@ -29,6 +31,8 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_elapsed += delta
+	if _artwork != null and not _collected:
+		_artwork.frame = int(floor(_elapsed * animation_speed * NORMAL_COIN_FRAME_COUNT)) % NORMAL_COIN_FRAME_COUNT
 
 	if _collected:
 		_pickup_elapsed += delta
@@ -50,6 +54,8 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	if _collected:
 		_draw_pickup_effect()
+		return
+	if _artwork != null:
 		return
 
 	var flip_width: float = 0.93 + 0.07 * absf(cos(_elapsed * TAU * animation_speed))
@@ -101,6 +107,8 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 
 	_collected = true
+	if _artwork != null:
+		_artwork.visible = false
 
 	set_deferred("monitoring", false)
 	_collision.set_deferred("disabled", true)
