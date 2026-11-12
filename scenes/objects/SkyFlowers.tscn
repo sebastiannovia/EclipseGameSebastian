@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/final_pack/STRATOS_Art_Assets/props/props_atlas_64px.png" id="1_props"]
+
+[sub_resource type="AtlasTexture" id="DecorationAtlas"]
+atlas = ExtResource("1_props")
+region = Rect2(384, 0, 64, 64)
+
+[node name="SkyFlowers" type="Node2D"]
+
+[node name="Artwork" type="Sprite2D" parent="."]
+texture_filter = 0
+texture = SubResource("DecorationAtlas")

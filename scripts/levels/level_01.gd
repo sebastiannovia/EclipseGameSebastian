@@ -71,14 +71,19 @@ enum State { PLAYING, WON }
 @onready var _restart_button: Button = get_node("VictoryUI/Center/Box/RestartButton") as Button
 @onready var _hint: Label = get_node("HudLayer/Hint") as Label
 @onready var _tutorial_ui: GrappleTutorial = get_node("GrappleTutorialSign") as GrappleTutorial
+@onready var _coin_count_label: Label = get_node("HudLayer/CoinCount") as Label
+@onready var _special_count_label: Label = get_node("HudLayer/SpecialCoinCount") as Label
 
 var _state: State = State.PLAYING
 var _elapsed: float = 0.0
 var _tutorial_completed: bool = false
 var _controller_prompts: bool = false
+var _coin_count: int = 0
+var _special_coin_count: int = 0
 
 
 func _ready() -> void:
+	add_to_group("collectible_tracker")
 	_camera.limit_left = LIMIT_LEFT
 	_camera.limit_top = LIMIT_TOP
 	_camera.limit_right = LIMIT_RIGHT
@@ -89,9 +94,25 @@ func _ready() -> void:
 	_player.grapple_attached.connect(_on_first_grapple_attached)
 	_restart_button.pressed.connect(_restart)
 	_victory.visible = false
+	_update_collectible_hud()
 	_update_control_prompts()
 
 	_respawn()
+
+
+func add_coins(amount: int) -> void:
+	_coin_count += maxi(0, amount)
+	_update_collectible_hud()
+
+
+func add_special_collectibles(amount: int) -> void:
+	_special_coin_count += maxi(0, amount)
+	_update_collectible_hud()
+
+
+func _update_collectible_hud() -> void:
+	_coin_count_label.text = "%d" % _coin_count
+	_special_count_label.text = "%d" % _special_coin_count
 
 
 func _input(event: InputEvent) -> void:

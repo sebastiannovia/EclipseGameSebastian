@@ -1,3 +1,4 @@
+
 extends Node2D
 class_name GrappleTutorial
 
@@ -7,19 +8,54 @@ var _completed: bool = false
 
 
 func _ready() -> void:
-	_control.text = "E — HOLD TO GRAPPLE"
+	_configure_label()
+	set_controller_prompts(false)
+
+
+func _configure_label() -> void:
+	# Position and size of the text inside the stone plate.
+	# The sign itself measures approximately 256 x 116 pixels.
+	_control.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_control.position = Vector2(-112.0, -19.0)
+	_control.size = Vector2(224.0, 36.0)
+
+	# Text alignment.
+	_control.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_control.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+
+	# Prevent text from escaping the sign.
+	_control.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_control.clip_text = true
+
+	# Font size.
+	_control.add_theme_font_size_override("font_size", 16)
+
+	# Improve small-size text rendering.
+	var original_font: FontFile = _control.get_theme_font("font") as FontFile
+
+	if original_font != null:
+		# Duplicate the font to avoid modifying other UI elements.
+		var sign_font: FontFile = original_font.duplicate() as FontFile
+
+		sign_font.multichannel_signed_distance_field = false
+		sign_font.hinting = TextServer.HINTING_LIGHT
+
+		_control.add_theme_font_override("font", sign_font)
 
 
 func set_controller_prompts(controller: bool) -> void:
 	if _completed:
 		return
+
 	_control.text = "RT — HOLD TO GRAPPLE" if controller else "E — HOLD TO GRAPPLE"
 
 
 func fade_out() -> void:
 	if _completed:
 		return
+
 	_completed = true
+
 	var tween: Tween = create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.8)
 	tween.tween_callback(_hide_sign)
@@ -30,19 +66,18 @@ func _hide_sign() -> void:
 
 
 func _draw() -> void:
-	# A short stone post ties the inscription to the starting island.
+	# The ornamental plate is a high-resolution pixel-art sprite child. Keep the
+	# existing stone post as world-space drawing behind that plate.
 	draw_colored_polygon(PackedVector2Array([
-		Vector2(-5.0, 50.0), Vector2(5.0, 50.0),
-		Vector2(4.0, 96.0), Vector2(-4.0, 96.0),
-	]), Color(0.35, 0.28, 0.31, 1.0))
-	draw_line(Vector2(-2.0, 56.0), Vector2(-2.0, 93.0), Color(0.78, 0.57, 0.31, 1.0), 1.0)
-
-	var panel: Rect2 = Rect2(Vector2(-128.0, -58.0), Vector2(256.0, 112.0))
-	draw_rect(panel, Color(0.035, 0.055, 0.09, 0.94), true)
-	draw_rect(panel, Color(0.91, 0.65, 0.28, 1.0), false, 2.0)
-	draw_line(Vector2(-116.0, -27.0), Vector2(116.0, -27.0), Color(0.22, 0.72, 0.69, 0.9), 1.0)
-	# Small turquoise diamond gives the old marker a magical accent.
+		Vector2(-7.0, 51.0), Vector2(7.0, 51.0),
+		Vector2(5.0, 92.0), Vector2(-5.0, 92.0),
+	]), Color(0.25, 0.2, 0.26, 1.0))
 	draw_colored_polygon(PackedVector2Array([
-		Vector2(116.0, -49.0), Vector2(121.0, -44.0),
-		Vector2(116.0, -39.0), Vector2(111.0, -44.0),
-	]), Color(0.28, 0.86, 0.82, 1.0))
+		Vector2(-2.0, 54.0), Vector2(1.0, 54.0),
+		Vector2(0.0, 90.0), Vector2(-3.0, 90.0),
+	]), Color(0.72, 0.53, 0.31, 1.0))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(-11.0, 90.0), Vector2(11.0, 90.0),
+		Vector2(14.0, 96.0), Vector2(-14.0, 96.0),
+	]), Color(0.42, 0.3, 0.31, 1.0))
+	draw_line(Vector2(-9.0, 93.0), Vector2(9.0, 93.0), Color(0.82, 0.61, 0.34, 1.0), 1.0)

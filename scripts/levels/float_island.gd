@@ -36,10 +36,33 @@ func _ready() -> void:
 		return
 	_half_size = rect.size * 0.5
 	_shape_offset = shape_node.position
-	queue_redraw()
+
+	# Platform artwork is fitted to the existing collision width and top edge.
+	# The collision shape and its transform remain the source of truth.
+	if get_parent() == null or get_parent().name != "Islands":
+		return
+	var texture_path := "res://assets/art/final_pack/STRATOS_Art_Assets/terrain/platform_small.png"
+	if rect.size.x >= 250.0:
+		texture_path = "res://assets/art/final_pack/STRATOS_Art_Assets/terrain/platform_large.png"
+	elif rect.size.x >= 140.0:
+		texture_path = "res://assets/art/final_pack/STRATOS_Art_Assets/terrain/platform_medium.png"
+	var sprite := Sprite2D.new()
+	sprite.name = "PlatformArtwork"
+	sprite.texture = load(texture_path) as Texture2D
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	sprite.centered = true
+	var texture_size: Vector2 = sprite.texture.get_size()
+	sprite.scale = Vector2(rect.size.x / texture_size.x, 1.0)
+	sprite.position = shape_node.position + Vector2(0.0, 13.0)
+	sprite.z_index = -1
+	add_child(sprite)
 
 
 func _draw() -> void:
+	# Island surfaces use the supplied prefabs fitted above. Keep the established
+	# procedural art for the non-walkable rock formations.
+	if get_parent() != null and get_parent().name == "Islands":
+		return
 	if _half_size == Vector2.ZERO:
 		return
 	draw_set_transform(_shape_offset, 0.0, Vector2.ONE)

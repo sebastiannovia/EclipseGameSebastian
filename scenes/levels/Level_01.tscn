@@ -3,10 +3,25 @@
 [ext_resource type="Script" uid="uid://dnysc2rygn0i8" path="res://scripts/levels/level_01.gd" id="1_level"]
 [ext_resource type="Script" uid="uid://bjvh4ayku2ees" path="res://scripts/levels/float_island.gd" id="2_island"]
 [ext_resource type="Script" uid="uid://caijd4fw6tg32" path="res://scripts/levels/portal.gd" id="3_portal"]
-[ext_resource type="Script" uid="uid://dfd7sr5phdcyb" path="res://scripts/levels/background.gd" id="4_background"]
 [ext_resource type="PackedScene" path="res://scenes/player/Player.tscn" id="5_player"]
 [ext_resource type="PackedScene" path="res://scenes/objects/FlyingCreature.tscn" id="6_creature"]
 [ext_resource type="Script" uid="uid://dl6h1rmsvidwq" path="res://scripts/levels/grapple_tutorial.gd" id="7_tutorial"]
+[ext_resource type="PackedScene" path="res://scenes/objects/Coin.tscn" id="8_dwcxj"]
+[ext_resource type="PackedScene" path="res://scenes/objects/SpecialCoin.tscn" id="9_c83vx"]
+[ext_resource type="FontFile" uid="uid://bcq18x63du72p" path="res://assets/fonts/TutorialSign-NotoSerif-Medium.ttf" id="10_tutorial_font"]
+[ext_resource type="Texture2D" uid="uid://cb1gkiqkm1v03" path="res://assets/art/final_pack/STRATOS_Art_Assets/background/bg_sky_islands_640x360.png" id="11_bg"]
+[ext_resource type="Texture2D" uid="uid://duufyxp4k3h78" path="res://assets/art/final_pack/STRATOS_Art_Assets/background/bg_clouds_parallax.png" id="12_clouds"]
+[ext_resource type="Texture2D" uid="uid://3wafhp38tuod" path="res://assets/art/final_pack/STRATOS_Art_Assets/background/bg_islands_parallax.png" id="13_far_islands"]
+[ext_resource type="Texture2D" uid="uid://bgywbx1nlgqom" path="res://assets/art/final_pack/STRATOS_Art_Assets/portals/portal_entry_blue.png" id="14_portal_entry"]
+[ext_resource type="Texture2D" uid="uid://cce8h3wx4mfvk" path="res://assets/art/final_pack/STRATOS_Art_Assets/portals/portal_exit_orange.png" id="15_portal_exit"]
+[ext_resource type="Texture2D" uid="uid://b62gts3ti8pvl" path="res://assets/art/final_pack/STRATOS_Art_Assets/ui/tutorial_sign_frame.png" id="16_tutorial_frame"]
+[ext_resource type="Texture2D" uid="uid://dx4e8kr3gnsov" path="res://assets/art/final_pack/STRATOS_Art_Assets/ui/hud_collectible_frames.png" id="17_hud_frames"]
+[ext_resource type="Texture2D" uid="uid://c4wqnfi2uc0yq" path="res://assets/art/final_pack/STRATOS_Art_Assets/ui/icon_coin.png" id="18_hud_coin"]
+[ext_resource type="Texture2D" uid="uid://3gt1rqryvbxb" path="res://assets/art/final_pack/STRATOS_Art_Assets/ui/icon_special_gem.png" id="19_hud_gem"]
+[ext_resource type="Shader" uid="uid://yf53wj1uidrn" path="res://assets/art/final_pack/cloud_edge_fade.gdshader" id="20_cloud_fade"]
+
+[sub_resource type="ShaderMaterial" id="CloudFadeMaterial"]
+shader = ExtResource("20_cloud_fade")
 
 [sub_resource type="RectangleShape2D" id="RectStart"]
 size = Vector2(340, 40)
@@ -74,13 +89,46 @@ size = Vector2(96, 96)
 [sub_resource type="RectangleShape2D" id="RectDeathPlane"]
 size = Vector2(5800, 24)
 
+[sub_resource type="AtlasTexture" id="HudCoinFrame"]
+atlas = ExtResource("17_hud_frames")
+region = Rect2(0, 0, 160, 72)
+
+[sub_resource type="AtlasTexture" id="HudGemFrame"]
+atlas = ExtResource("17_hud_frames")
+region = Rect2(160, 0, 160, 72)
+
 [node name="Level_01" type="Node2D" unique_id=485609847]
 script = ExtResource("1_level")
 
 [node name="Background" type="Node2D" parent="." unique_id=1780891953]
 z_index = -20
-script = ExtResource("4_background")
-content_right = 5700.0
+
+[node name="Backdrop" type="Parallax2D" parent="Background" unique_id=906362454]
+scroll_scale = Vector2(0, 0)
+repeat_size = Vector2(640, 0)
+repeat_times = 10
+
+[node name="Sky" type="Sprite2D" parent="Background/Backdrop" unique_id=1965784943]
+texture = ExtResource("11_bg")
+
+[node name="DistantIslands" type="Parallax2D" parent="Background" unique_id=1192578213]
+scroll_scale = Vector2(0.08, 0.04)
+repeat_size = Vector2(640, 0)
+repeat_times = 10
+
+[node name="Layer" type="Sprite2D" parent="Background/DistantIslands" unique_id=1709620618]
+scale = Vector2(0.333333, 0.333333)
+texture = ExtResource("13_far_islands")
+
+[node name="Clouds" type="Parallax2D" parent="Background" unique_id=889435374]
+scroll_scale = Vector2(0.16, 0.07)
+repeat_size = Vector2(640, 0)
+repeat_times = 10
+
+[node name="Layer" type="Sprite2D" parent="Background/Clouds" unique_id=29588490]
+material = SubResource("CloudFadeMaterial")
+scale = Vector2(0.333333, 0.333333)
+texture = ExtResource("12_clouds")
 
 [node name="Islands" type="Node2D" parent="." unique_id=1501210538]
 
@@ -426,6 +474,10 @@ script = ExtResource("3_portal")
 radii = Vector2(28, 38)
 spin_speed = 1.2
 
+[node name="PortalArtwork" type="Sprite2D" parent="EntrancePortal" unique_id=1790214483]
+position = Vector2(0, -80)
+texture = ExtResource("14_portal_entry")
+
 [node name="ExitPortal" type="Node2D" parent="." unique_id=1074482002]
 z_index = 1
 position = Vector2(5360, -75)
@@ -438,6 +490,10 @@ core_color = Color(1, 0.96, 0.82, 1)
 spark_color = Color(1, 0.88, 0.62, 1)
 spin_speed = 1.9
 pulse_speed = 2.8
+
+[node name="PortalArtwork" type="Sprite2D" parent="ExitPortal" unique_id=1415316828]
+position = Vector2(0, -80)
+texture = ExtResource("15_portal_exit")
 
 [node name="Area2D" type="Area2D" parent="ExitPortal" unique_id=1851991694]
 
@@ -452,50 +508,72 @@ position = Vector2(2700, 175)
 shape = SubResource("RectDeathPlane")
 
 [node name="GrappleTutorialSign" type="Node2D" parent="." unique_id=1549187665]
-z_index = 15
+z_index = -5
 texture_filter = 1
-position = Vector2(270, -100)
+position = Vector2(295.265, -65.99)
+scale = Vector2(0.78, 0.78)
 script = ExtResource("7_tutorial")
 
+[node name="SignFrame" type="Sprite2D" parent="GrappleTutorialSign" unique_id=648364568]
+z_index = -1
+texture = ExtResource("16_tutorial_frame")
+
 [node name="Title" type="Label" parent="GrappleTutorialSign" unique_id=554717701]
+texture_filter = 2
 offset_left = -118.0
 offset_top = -49.0
 offset_right = 118.0
 offset_bottom = -30.0
 theme_override_colors/font_color = Color(1, 0.82, 0.45, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_colors/font_outline_color = Color(0.12, 0.08, 0.12, 1)
+theme_override_constants/outline_size = 1
+theme_override_fonts/font = ExtResource("10_tutorial_font")
+theme_override_font_sizes/font_size = 15
 text = "YOUR FIRST GRAPPLE"
 horizontal_alignment = 1
 
 [node name="Control" type="Label" parent="GrappleTutorialSign" unique_id=1410038493]
+texture_filter = 2
 offset_left = -118.0
 offset_top = -24.0
 offset_right = 118.0
 offset_bottom = -7.0
 theme_override_colors/font_color = Color(0.35, 0.94, 0.9, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_outline_color = Color(0.06, 0.12, 0.15, 1)
+theme_override_constants/outline_size = 1
+theme_override_fonts/font = ExtResource("10_tutorial_font")
+theme_override_font_sizes/font_size = 13
 text = "E — HOLD TO GRAPPLE"
 horizontal_alignment = 1
 
 [node name="Message" type="Label" parent="GrappleTutorialSign" unique_id=1774202934]
+texture_filter = 2
 offset_left = -119.0
 offset_top = -2.0
 offset_right = 117.0
 offset_bottom = 27.0
 theme_override_colors/font_color = Color(0.96, 0.96, 0.94, 1)
-theme_override_font_sizes/font_size = 9
+theme_override_colors/font_outline_color = Color(0.05, 0.07, 0.12, 1)
+theme_override_constants/outline_size = 1
+theme_override_fonts/font = ExtResource("10_tutorial_font")
+theme_override_font_sizes/font_size = 12
 text = "Grab a nearby Sky Skimmer and swing
 across the sky."
 horizontal_alignment = 1
 
 [node name="ReleaseMessage" type="Label" parent="GrappleTutorialSign" unique_id=827088776]
+texture_filter = 2
 offset_left = -118.0
-offset_top = 28.0
+offset_top = 29.0
 offset_right = 118.0
-offset_bottom = 47.0
+offset_bottom = 55.0
 theme_override_colors/font_color = Color(0.96, 0.96, 0.94, 1)
-theme_override_font_sizes/font_size = 8
-text = "Release to let go and keep your momentum."
+theme_override_colors/font_outline_color = Color(0.05, 0.07, 0.12, 1)
+theme_override_constants/outline_size = 1
+theme_override_fonts/font = ExtResource("10_tutorial_font")
+theme_override_font_sizes/font_size = 11
+text = "Release to let go and keep
+your momentum."
 horizontal_alignment = 1
 
 [node name="Player" parent="." unique_id=488134938 instance=ExtResource("5_player")]
@@ -503,6 +581,60 @@ position = Vector2(100, 0)
 
 [node name="HudLayer" type="CanvasLayer" parent="." unique_id=208181902]
 layer = 5
+
+[node name="CoinFrame" type="TextureRect" parent="HudLayer" unique_id=1346560128]
+offset_left = 8.0
+offset_top = 6.0
+offset_right = 88.0
+offset_bottom = 42.0
+mouse_filter = 2
+texture = SubResource("HudCoinFrame")
+
+[node name="GemFrame" type="TextureRect" parent="HudLayer" unique_id=485872441]
+offset_left = 94.0
+offset_top = 6.0
+offset_right = 174.0
+offset_bottom = 42.0
+mouse_filter = 2
+texture = SubResource("HudGemFrame")
+
+[node name="CoinIcon" type="TextureRect" parent="HudLayer" unique_id=1629741195]
+offset_left = 15.0
+offset_top = 16.0
+offset_right = 31.0
+offset_bottom = 32.0
+mouse_filter = 2
+texture = ExtResource("18_hud_coin")
+
+[node name="GemIcon" type="TextureRect" parent="HudLayer" unique_id=192839764]
+offset_left = 101.0
+offset_top = 16.0
+offset_right = 117.0
+offset_bottom = 32.0
+mouse_filter = 2
+texture = ExtResource("19_hud_gem")
+
+[node name="CoinCount" type="Label" parent="HudLayer" unique_id=746113789]
+offset_left = 37.0
+offset_top = 15.0
+offset_right = 80.0
+offset_bottom = 33.0
+theme_override_colors/font_color = Color(1, 0.86, 0.56, 1)
+theme_override_font_sizes/font_size = 12
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpecialCoinCount" type="Label" parent="HudLayer" unique_id=547967595]
+offset_left = 123.0
+offset_top = 15.0
+offset_right = 166.0
+offset_bottom = 33.0
+theme_override_colors/font_color = Color(0.55, 0.94, 0.91, 1)
+theme_override_font_sizes/font_size = 12
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Hint" type="Label" parent="HudLayer" unique_id=515431898]
 modulate = Color(1, 0.93, 0.78, 0.8)
@@ -562,3 +694,75 @@ layout_mode = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Play again   ( R )"
+
+[node name="Coin" parent="." unique_id=709148945 instance=ExtResource("8_dwcxj")]
+position = Vector2(663, -12)
+
+[node name="Coin2" parent="." unique_id=1241872642 instance=ExtResource("8_dwcxj")]
+position = Vector2(489, 0)
+
+[node name="Coin3" parent="." unique_id=1686990710 instance=ExtResource("8_dwcxj")]
+position = Vector2(356, -12)
+
+[node name="Coin4" parent="." unique_id=713224064 instance=ExtResource("8_dwcxj")]
+position = Vector2(663, -12)
+
+[node name="Coin5" parent="." unique_id=809517924 instance=ExtResource("8_dwcxj")]
+position = Vector2(934, -12)
+
+[node name="Coin6" parent="." unique_id=267057846 instance=ExtResource("8_dwcxj")]
+position = Vector2(1246, -107)
+
+[node name="SpecialCoin" parent="." unique_id=880627499 instance=ExtResource("9_c83vx")]
+position = Vector2(1149, -237)
+
+[node name="Coin7" parent="." unique_id=1571579255 instance=ExtResource("8_dwcxj")]
+position = Vector2(1372, -34)
+
+[node name="Coin8" parent="." unique_id=1270231350 instance=ExtResource("8_dwcxj")]
+position = Vector2(1563, -33)
+
+[node name="Coin9" parent="." unique_id=1925771718 instance=ExtResource("8_dwcxj")]
+position = Vector2(1748, -17)
+
+[node name="Coin10" parent="." unique_id=982139543 instance=ExtResource("8_dwcxj")]
+position = Vector2(1947, -31)
+
+[node name="SpecialCoin2" parent="." unique_id=116108277 instance=ExtResource("9_c83vx")]
+position = Vector2(2100, -253)
+
+[node name="Coin11" parent="." unique_id=1875455887 instance=ExtResource("8_dwcxj")]
+position = Vector2(2234, -31)
+
+[node name="Coin12" parent="." unique_id=1412699214 instance=ExtResource("8_dwcxj")]
+position = Vector2(2426, -32)
+
+[node name="Coin13" parent="." unique_id=445564213 instance=ExtResource("8_dwcxj")]
+position = Vector2(2573, -15)
+
+[node name="Coin14" parent="." unique_id=555414989 instance=ExtResource("8_dwcxj")]
+position = Vector2(2872, -64)
+
+[node name="Coin15" parent="." unique_id=528922228 instance=ExtResource("8_dwcxj")]
+position = Vector2(3352, -62)
+
+[node name="Coin16" parent="." unique_id=1829129252 instance=ExtResource("8_dwcxj")]
+position = Vector2(3102, -49)
+
+[node name="Coin17" parent="." unique_id=1280689777 instance=ExtResource("8_dwcxj")]
+position = Vector2(3719, 28)
+
+[node name="SpecialCoin3" parent="." unique_id=1551101725 instance=ExtResource("9_c83vx")]
+position = Vector2(4030, -175)
+
+[node name="Coin18" parent="." unique_id=546393134 instance=ExtResource("8_dwcxj")]
+position = Vector2(4083, 8)
+
+[node name="Coin19" parent="." unique_id=339049695 instance=ExtResource("8_dwcxj")]
+position = Vector2(4405, -41)
+
+[node name="Coin20" parent="." unique_id=1526992086 instance=ExtResource("8_dwcxj")]
+position = Vector2(4562, -22)
+
+[node name="Coin21" parent="." unique_id=1447132641 instance=ExtResource("8_dwcxj")]
+position = Vector2(4931, -47)
