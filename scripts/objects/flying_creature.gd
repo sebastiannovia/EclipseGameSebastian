@@ -223,11 +223,11 @@ func _update_anchor_fx() -> void:
 
 	if _hooked:
 		_anchor_fx.modulate = Color(hooked_color, 1.0)
-		_anchor_fx.scale = Vector2(anchor_scale * 1.25, anchor_scale * 1.25)
-		_anchor_fx.speed_scale = 1.6
+		_anchor_fx.scale = Vector2(anchor_scale * 1.1, anchor_scale * 1.1)
+		_anchor_fx.speed_scale = 1.0
 	else:
-		var pulse: float = 0.5 + 0.5 * sin(_elapsed * 6.0)
-		_anchor_fx.modulate = Color(range_color, 0.45 + 0.4 * pulse)
+		var pulse: float = 0.5 + 0.5 * sin(_elapsed * 2.5)
+		_anchor_fx.modulate = Color(range_color, 0.38 + 0.2 * pulse)
 		_anchor_fx.scale = Vector2(anchor_scale, anchor_scale)
 		_anchor_fx.speed_scale = 1.0
 

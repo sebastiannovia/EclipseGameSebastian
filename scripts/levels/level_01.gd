@@ -71,8 +71,8 @@ enum State { PLAYING, WON }
 @onready var _restart_button: Button = get_node("VictoryUI/Center/Box/RestartButton") as Button
 @onready var _hint: Label = get_node("HudLayer/Hint") as Label
 @onready var _tutorial_ui: GrappleTutorial = get_node("GrappleTutorialSign") as GrappleTutorial
-@onready var _coin_count_label: Label = get_node("HudLayer/CoinCount") as Label
-@onready var _special_count_label: Label = get_node("HudLayer/SpecialCoinCount") as Label
+@onready var _coin_count_label: Label = get_node("HudLayer/CollectiblesPanel/Counters/CoinCounter/CoinCount") as Label
+@onready var _special_count_label: Label = get_node("HudLayer/CollectiblesPanel/Counters/SpecialCounter/SpecialCoinCount") as Label
 
 var _state: State = State.PLAYING
 var _elapsed: float = 0.0

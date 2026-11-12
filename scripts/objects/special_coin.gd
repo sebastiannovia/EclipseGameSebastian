@@ -1,20 +1,36 @@
 extends "res://scripts/objects/coin.gd"
 
-const GEM_SHEET: Texture2D = preload("res://assets/art/final_pack/STRATOS_Art_Assets/collectibles/special_gem_spin_6f_40x40.png")
-const GEM_PICKUP_SHEET: Texture2D = preload("res://assets/art/final_pack/STRATOS_Art_Assets/effects/gem_pickup_8f_64x64.png")
-
-
 func _draw_idle_art() -> void:
-	var frame: int = int(floor(_elapsed * animation_speed * 8.0)) % 6
-	var region := Rect2(Vector2(frame * 40, 0), Vector2(40, 40))
-	draw_texture_rect_region(GEM_SHEET, Rect2(-20, -20, 40, 40), region)
+	# A small turquoise gem with a restrained gold setting and crisp facets.
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(0, -14), Vector2(8, -9), Vector2(10, -4), Vector2(8, 7),
+		Vector2(0, 14), Vector2(-8, 7), Vector2(-10, -4), Vector2(-8, -9),
+	]), Color(0.30, 0.19, 0.12, 1.0))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(0, -12), Vector2(7, -8), Vector2(8, -3), Vector2(6, 6),
+		Vector2(0, 11), Vector2(-6, 6), Vector2(-8, -3), Vector2(-7, -8),
+	]), Color(0.83, 0.55, 0.20, 1.0))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(0, -9), Vector2(5, -6), Vector2(6, -2), Vector2(4, 5),
+		Vector2(0, 9), Vector2(-4, 5), Vector2(-6, -2), Vector2(-5, -6),
+	]), Color(0.13, 0.52, 0.55, 1.0))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(0, -8), Vector2(3, -5), Vector2(0, 2), Vector2(-3, -1),
+	]), Color(0.50, 0.82, 0.75, 1.0))
 
 
 func _draw_pickup_effect() -> void:
-	var frame: int = mini(7, int(floor(_pickup_elapsed / _pickup_duration() * 8.0)))
-	var region := Rect2(Vector2(frame * 64, 0), Vector2(64, 64))
-	var alpha: float = 1.0 - clampf(_pickup_elapsed / _pickup_duration(), 0.0, 1.0)
-	draw_texture_rect_region(GEM_PICKUP_SHEET, Rect2(-32, -32, 64, 64), region, Color(1, 1, 1, alpha))
+	var progress: float = clampf(_pickup_elapsed / _pickup_duration(), 0.0, 1.0)
+	var alpha: float = 1.0 - progress
+	for index in 7:
+		var angle: float = TAU * float(index) / 7.0 + progress * 0.25
+		var point: Vector2 = Vector2.from_angle(angle) * (3.0 + progress * 11.0)
+		var size: float = 1.8 * alpha + 0.5
+		var color := Color(0.33, 0.77, 0.73, alpha) if index % 2 == 0 else Color(0.82, 0.55, 0.22, alpha)
+		draw_colored_polygon(PackedVector2Array([
+			point + Vector2(0, -size), point + Vector2(size * 0.6, 0),
+			point + Vector2(0, size), point + Vector2(-size * 0.6, 0),
+		]), color)
 
 
 func _award_collection() -> void:

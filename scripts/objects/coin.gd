@@ -3,19 +3,11 @@ extends Area2D
 class_name CoinPickup
 
 @export_range(1, 999, 1) var value: int = 1
-@export_range(0.2, 4.0, 0.1) var animation_speed: float = 0.8
-@export_range(0.0, 8.0, 0.25) var bob_height: float = 2.5
+@export_range(0.2, 4.0, 0.1) var animation_speed: float = 0.4
+@export_range(0.0, 8.0, 0.25) var bob_height: float = 1.0
 
 const TRACKER_GROUP: StringName = &"collectible_tracker"
 const PICKUP_DURATION: float = 0.38
-
-const COIN_SHEET: Texture2D = preload(
-	"res://assets/art/final_pack/STRATOS_Art_Assets/collectibles/coin_spin_6f_32x32.png"
-)
-
-const PICKUP_SHEET: Texture2D = preload(
-	"res://assets/art/final_pack/STRATOS_Art_Assets/effects/coin_pickup_8f_64x64.png"
-)
 
 @onready var _collision: CollisionShape2D = get_node_or_null("CollisionShape2D") as CollisionShape2D
 
@@ -42,7 +34,7 @@ func _process(delta: float) -> void:
 		_pickup_elapsed += delta
 		queue_redraw()
 
-		if _pickup_elapsed >= PICKUP_DURATION:
+		if _pickup_elapsed >= _pickup_duration():
 			queue_free()
 
 		return
@@ -60,46 +52,48 @@ func _draw() -> void:
 		_draw_pickup_effect()
 		return
 
+	var flip_width: float = 0.93 + 0.07 * absf(cos(_elapsed * TAU * animation_speed))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2(flip_width, 1.0))
 	_draw_idle_art()
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _draw_idle_art() -> void:
-	var frame: int = int(floor(_elapsed * animation_speed * 8.0)) % 6
-	var region := Rect2(
-		Vector2(frame * 32, 0),
-		Vector2(32, 32)
-	)
-
-	draw_texture_rect_region(
-		COIN_SHEET,
-		Rect2(-16, -16, 32, 32),
-		region
-	)
+	# A faceted gold coin with a dark rim and a restrained engraved sun mark.
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(-4, -11), Vector2(4, -11), Vector2(8, -9), Vector2(11, -4),
+		Vector2(11, 4), Vector2(8, 9), Vector2(4, 11), Vector2(-4, 11),
+		Vector2(-8, 9), Vector2(-11, 4), Vector2(-11, -4), Vector2(-8, -9),
+	]), Color(0.31, 0.16, 0.07, 1.0))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(-4, -9), Vector2(4, -9), Vector2(7, -7), Vector2(9, -3),
+		Vector2(9, 3), Vector2(7, 7), Vector2(4, 9), Vector2(-4, 9),
+		Vector2(-7, 7), Vector2(-9, 3), Vector2(-9, -3), Vector2(-7, -7),
+	]), Color(0.76, 0.43, 0.13, 1.0))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(-3, -7), Vector2(3, -7), Vector2(6, -5), Vector2(7, -2),
+		Vector2(7, 2), Vector2(5, 5), Vector2(3, 7), Vector2(-3, 7),
+		Vector2(-5, 5), Vector2(-7, 2), Vector2(-7, -2), Vector2(-5, -5),
+	]), Color(0.91, 0.62, 0.22, 1.0))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(0, -4), Vector2(3, 0), Vector2(0, 4), Vector2(-3, 0),
+	]), Color(0.56, 0.31, 0.10, 1.0))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(-6, -5), Vector2(-4, -7), Vector2(-1, -7), Vector2(-4, -5),
+	]), Color(1.0, 0.79, 0.42, 1.0))
 
 
 func _draw_pickup_effect() -> void:
-	var frame: int = mini(
-		7,
-		int(floor(_pickup_elapsed / PICKUP_DURATION * 8.0))
-	)
-
-	var region := Rect2(
-		Vector2(frame * 64, 0),
-		Vector2(64, 64)
-	)
-
-	var alpha: float = 1.0 - clampf(
-		_pickup_elapsed / PICKUP_DURATION,
-		0.0,
-		1.0
-	)
-
-	draw_texture_rect_region(
-		PICKUP_SHEET,
-		Rect2(-32, -32, 64, 64),
-		region,
-		Color(1, 1, 1, alpha)
-	)
+	var progress: float = clampf(_pickup_elapsed / PICKUP_DURATION, 0.0, 1.0)
+	var alpha: float = 1.0 - progress
+	for index in 5:
+		var angle: float = TAU * float(index) / 5.0 - PI * 0.5
+		var point: Vector2 = Vector2.from_angle(angle) * (2.0 + progress * 8.0)
+		var size: float = 1.5 * alpha + 0.5
+		draw_colored_polygon(PackedVector2Array([
+			point + Vector2(0, -size), point + Vector2(size * 0.6, 0),
+			point + Vector2(0, size), point + Vector2(-size * 0.6, 0),
+		]), Color(0.88, 0.59, 0.22, alpha))
 
 
 func _on_body_entered(body: Node2D) -> void:
@@ -122,3 +116,7 @@ func _award_collection() -> void:
 		tracker.call("add_coins", maxi(1, value))
 	else:
 		push_warning("CoinPickup: No collectible tracker found.")
+
+
+func _pickup_duration() -> float:
+	return PICKUP_DURATION

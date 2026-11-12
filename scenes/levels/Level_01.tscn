@@ -89,13 +89,9 @@ size = Vector2(96, 96)
 [sub_resource type="RectangleShape2D" id="RectDeathPlane"]
 size = Vector2(5800, 24)
 
-[sub_resource type="AtlasTexture" id="HudCoinFrame"]
+[sub_resource type="AtlasTexture" id="HudPanelFrame"]
 atlas = ExtResource("17_hud_frames")
-region = Rect2(0, 0, 160, 72)
-
-[sub_resource type="AtlasTexture" id="HudGemFrame"]
-atlas = ExtResource("17_hud_frames")
-region = Rect2(160, 0, 160, 72)
+region = Rect2(0, 0, 320, 72)
 
 [node name="Level_01" type="Node2D" unique_id=485609847]
 script = ExtResource("1_level")
@@ -109,6 +105,7 @@ repeat_size = Vector2(640, 0)
 repeat_times = 10
 
 [node name="Sky" type="Sprite2D" parent="Background/Backdrop" unique_id=1965784943]
+modulate = Color(0.88, 0.86, 0.93, 1)
 texture = ExtResource("11_bg")
 
 [node name="DistantIslands" type="Parallax2D" parent="Background" unique_id=1192578213]
@@ -117,6 +114,7 @@ repeat_size = Vector2(640, 0)
 repeat_times = 10
 
 [node name="Layer" type="Sprite2D" parent="Background/DistantIslands" unique_id=1709620618]
+modulate = Color(0.86, 0.86, 0.94, 0.72)
 scale = Vector2(0.333333, 0.333333)
 texture = ExtResource("13_far_islands")
 
@@ -126,6 +124,7 @@ repeat_size = Vector2(640, 0)
 repeat_times = 10
 
 [node name="Layer" type="Sprite2D" parent="Background/Clouds" unique_id=29588490]
+modulate = Color(1, 1, 1, 0.58)
 material = SubResource("CloudFadeMaterial")
 scale = Vector2(0.333333, 0.333333)
 texture = ExtResource("12_clouds")
@@ -475,6 +474,7 @@ radii = Vector2(28, 38)
 spin_speed = 1.2
 
 [node name="PortalArtwork" type="Sprite2D" parent="EntrancePortal" unique_id=1790214483]
+modulate = Color(0.92, 0.92, 0.92, 1)
 position = Vector2(0, -80)
 texture = ExtResource("14_portal_entry")
 
@@ -492,6 +492,7 @@ spin_speed = 1.9
 pulse_speed = 2.8
 
 [node name="PortalArtwork" type="Sprite2D" parent="ExitPortal" unique_id=1415316828]
+modulate = Color(0.92, 0.92, 0.92, 1)
 position = Vector2(0, -80)
 texture = ExtResource("15_portal_exit")
 
@@ -582,55 +583,71 @@ position = Vector2(100, 0)
 [node name="HudLayer" type="CanvasLayer" parent="." unique_id=208181902]
 layer = 5
 
-[node name="CoinFrame" type="TextureRect" parent="HudLayer" unique_id=1346560128]
+[node name="CollectiblesPanel" type="TextureRect" parent="HudLayer"]
 offset_left = 8.0
 offset_top = 6.0
-offset_right = 88.0
+offset_right = 168.0
 offset_bottom = 42.0
 mouse_filter = 2
-texture = SubResource("HudCoinFrame")
+texture = SubResource("HudPanelFrame")
+stretch_mode = 0
 
-[node name="GemFrame" type="TextureRect" parent="HudLayer" unique_id=485872441]
-offset_left = 94.0
-offset_top = 6.0
-offset_right = 174.0
-offset_bottom = 42.0
+[node name="Counters" type="HBoxContainer" parent="HudLayer/CollectiblesPanel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = -10.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("HudGemFrame")
+theme_override_constants/separation = 10
 
-[node name="CoinIcon" type="TextureRect" parent="HudLayer" unique_id=1629741195]
-offset_left = 15.0
-offset_top = 16.0
-offset_right = 31.0
-offset_bottom = 32.0
+[node name="CoinCounter" type="HBoxContainer" parent="HudLayer/CollectiblesPanel/Counters"]
+layout_mode = 2
+custom_minimum_size = Vector2(65, 0)
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="CoinIcon" type="TextureRect" parent="HudLayer/CollectiblesPanel/Counters/CoinCounter"]
+layout_mode = 2
+custom_minimum_size = Vector2(16, 16)
 mouse_filter = 2
 texture = ExtResource("18_hud_coin")
+stretch_mode = 0
 
-[node name="GemIcon" type="TextureRect" parent="HudLayer" unique_id=192839764]
-offset_left = 101.0
-offset_top = 16.0
-offset_right = 117.0
-offset_bottom = 32.0
+[node name="CoinCount" type="Label" parent="HudLayer/CollectiblesPanel/Counters/CoinCounter"]
+layout_mode = 2
+custom_minimum_size = Vector2(32, 0)
+size_flags_horizontal = 3
 mouse_filter = 2
-texture = ExtResource("19_hud_gem")
-
-[node name="CoinCount" type="Label" parent="HudLayer" unique_id=746113789]
-offset_left = 37.0
-offset_top = 15.0
-offset_right = 80.0
-offset_bottom = 33.0
-theme_override_colors/font_color = Color(1, 0.86, 0.56, 1)
+theme_override_colors/font_color = Color(1, 0.84, 0.55, 1)
 theme_override_font_sizes/font_size = 12
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SpecialCoinCount" type="Label" parent="HudLayer" unique_id=547967595]
-offset_left = 123.0
-offset_top = 15.0
-offset_right = 166.0
-offset_bottom = 33.0
-theme_override_colors/font_color = Color(0.55, 0.94, 0.91, 1)
+[node name="SpecialCounter" type="HBoxContainer" parent="HudLayer/CollectiblesPanel/Counters"]
+layout_mode = 2
+custom_minimum_size = Vector2(65, 0)
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="GemIcon" type="TextureRect" parent="HudLayer/CollectiblesPanel/Counters/SpecialCounter"]
+layout_mode = 2
+custom_minimum_size = Vector2(16, 16)
+mouse_filter = 2
+texture = ExtResource("19_hud_gem")
+stretch_mode = 0
+
+[node name="SpecialCoinCount" type="Label" parent="HudLayer/CollectiblesPanel/Counters/SpecialCounter"]
+layout_mode = 2
+custom_minimum_size = Vector2(32, 0)
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.52, 0.86, 0.82, 1)
 theme_override_font_sizes/font_size = 12
 text = "0"
 horizontal_alignment = 1

@@ -53,7 +53,12 @@ func _ready() -> void:
 	sprite.centered = true
 	var texture_size: Vector2 = sprite.texture.get_size()
 	sprite.scale = Vector2(rect.size.x / texture_size.x, 1.0)
-	sprite.position = shape_node.position + Vector2(0.0, 13.0)
+	# All supplied platform prefabs put the grass surface seven pixels below the image top.
+	# Align the first visible grass row with the collision top for each texture
+	# height and each existing rectangle height.
+	var visible_surface_row: float = 7.0
+	var artwork_top_offset: float = (texture_size.y - rect.size.y) * 0.5 - visible_surface_row
+	sprite.position = shape_node.position + Vector2(0.0, artwork_top_offset)
 	sprite.z_index = -1
 	add_child(sprite)
 

@@ -33,7 +33,7 @@ func _process(delta: float) -> void:
 	_elapsed += delta
 	var artwork: Sprite2D = get_node_or_null("PortalArtwork") as Sprite2D
 	if artwork != null:
-		artwork.scale.y = 1.0 + 0.018 * sin(_elapsed * pulse_speed)
+		artwork.scale.y = 1.0 + 0.008 * sin(_elapsed * pulse_speed)
 	else:
 		queue_redraw()
 
