@@ -512,7 +512,7 @@ shape = SubResource("RectDeathPlane")
 z_index = -5
 texture_filter = 1
 position = Vector2(295.265, -65.99)
-scale = Vector2(0.78, 0.78)
+scale = Vector2(0.395, 0.395)
 script = ExtResource("7_tutorial")
 
 [node name="SignFrame" type="Sprite2D" parent="GrappleTutorialSign" unique_id=648364568]
@@ -583,17 +583,17 @@ position = Vector2(100, 0)
 [node name="HudLayer" type="CanvasLayer" parent="." unique_id=208181902]
 layer = 5
 
-[node name="CollectiblesPanel" type="TextureRect" parent="HudLayer"]
+[node name="CollectiblesPanel" type="TextureRect" parent="HudLayer" unique_id=1847222716]
 offset_left = 8.0
 offset_top = 6.0
 offset_right = 168.0
 offset_bottom = 42.0
+scale = Vector2(0.45, 0.45)
 mouse_filter = 2
 texture = SubResource("HudPanelFrame")
-stretch_mode = 0
 
-[node name="Counters" type="HBoxContainer" parent="HudLayer/CollectiblesPanel"]
-anchors_preset = 15
+[node name="Counters" type="HBoxContainer" parent="HudLayer/CollectiblesPanel" unique_id=1337907203]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 10.0
@@ -603,50 +603,46 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="CoinCounter" type="HBoxContainer" parent="HudLayer/CollectiblesPanel/Counters"]
-layout_mode = 2
+[node name="CoinCounter" type="HBoxContainer" parent="HudLayer/CollectiblesPanel/Counters" unique_id=615097579]
 custom_minimum_size = Vector2(65, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="CoinIcon" type="TextureRect" parent="HudLayer/CollectiblesPanel/Counters/CoinCounter"]
-layout_mode = 2
+[node name="CoinIcon" type="TextureRect" parent="HudLayer/CollectiblesPanel/Counters/CoinCounter" unique_id=1380236693]
 custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("18_hud_coin")
-stretch_mode = 0
 
-[node name="CoinCount" type="Label" parent="HudLayer/CollectiblesPanel/Counters/CoinCounter"]
-layout_mode = 2
+[node name="CoinCount" type="Label" parent="HudLayer/CollectiblesPanel/Counters/CoinCounter" unique_id=2130491095]
 custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.84, 0.55, 1)
 theme_override_font_sizes/font_size = 12
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SpecialCounter" type="HBoxContainer" parent="HudLayer/CollectiblesPanel/Counters"]
-layout_mode = 2
+[node name="SpecialCounter" type="HBoxContainer" parent="HudLayer/CollectiblesPanel/Counters" unique_id=514792292]
 custom_minimum_size = Vector2(65, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="GemIcon" type="TextureRect" parent="HudLayer/CollectiblesPanel/Counters/SpecialCounter"]
-layout_mode = 2
+[node name="GemIcon" type="TextureRect" parent="HudLayer/CollectiblesPanel/Counters/SpecialCounter" unique_id=441595819]
 custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("19_hud_gem")
-stretch_mode = 0
 
-[node name="SpecialCoinCount" type="Label" parent="HudLayer/CollectiblesPanel/Counters/SpecialCounter"]
-layout_mode = 2
+[node name="SpecialCoinCount" type="Label" parent="HudLayer/CollectiblesPanel/Counters/SpecialCounter" unique_id=499358832]
 custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.52, 0.86, 0.82, 1)
 theme_override_font_sizes/font_size = 12
 text = "0"
