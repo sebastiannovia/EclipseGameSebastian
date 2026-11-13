@@ -7,6 +7,9 @@ const SCALE: float = 0.125
 const SPEED_TO_TURN: float = 3.0
 const IDLE_CYCLE_SECONDS: float = 2.4
 const BREATH_LIFT_SOURCE_PX: float = 8.0
+const SWING_FRAME_SEQUENCE: Array[int] = [2, 3, 4, 3]
+const SWING_FRAME_DURATION: float = 0.15
+const JUMP_SOLE_ROWS: Array[float] = [492.0, 467.0, 404.0, 386.0, 448.0, 470.0, 474.0, 475.0]
 
 @onready var _body: Player = get_parent() as Player
 @onready var _torso: Node2D = get_node("RigCanvas/Pelvis/Torso") as Node2D
@@ -23,6 +26,7 @@ const WALK_FRAME_COUNT := 8
 var _walk_phase := 0.0
 var _takeoff_timer := 0.0
 var _landing_timer := 0.0
+var _swing_elapsed := 0.0
 var _airborne_visual := false
 
 var _facing: float = 1.0
@@ -33,7 +37,7 @@ func _ready() -> void:
 	_set_facing(1.0)
 	_body.visual_jump.connect(_on_jump_started)
 	_body.visual_landing.connect(_on_landed)
-	_body.grapple_attached.connect(_on_jump_started)
+	_body.grapple_attached.connect(_on_grapple_attached)
 	_body.grapple_released.connect(_on_grapple_released)
 	_snap_visual_origin()
 
@@ -48,12 +52,13 @@ func _process(delta: float) -> void:
 	_takeoff_timer = maxf(0.0, _takeoff_timer - delta)
 	_landing_timer = maxf(0.0, _landing_timer - delta)
 	var speed: float = absf(_body.velocity.x)
+	var swinging: bool = _body.is_grappling and _body.is_physics_processing()
 	var grounded: bool = _body.is_on_floor() and not _body.is_grappling and _body.is_physics_processing()
 	var moving: bool = grounded and speed > SPEED_TO_TURN
 	var jumping: bool = (_airborne_visual and not _body.is_grappling and _body.is_physics_processing()) or (_landing_timer > 0.0 and grounded and speed <= SPEED_TO_TURN)
-	_rig.visible = not moving and not jumping
+	_rig.visible = not moving and not jumping and not swinging
 	_walk.visible = moving
-	_jump.visible = jumping
+	_jump.visible = jumping or swinging
 	_set_neutral_pose()
 	if moving:
 		_walk_phase = fposmod(_walk_phase + speed * delta / STRIDE_DISTANCE, 1.0)
@@ -63,8 +68,13 @@ func _process(delta: float) -> void:
 		if grounded and not jumping:
 			_idle_elapsed = fposmod(_idle_elapsed + delta, IDLE_CYCLE_SECONDS)
 			_apply_idle_pose()
-	if jumping:
+	if swinging:
+		_swing_elapsed += delta
+		_update_swing_frame()
+	elif jumping:
 		_update_jump_frame()
+	else:
+		_swing_elapsed = 0.0
 
 
 func _update_jump_frame() -> void:
@@ -83,16 +93,32 @@ func _update_jump_frame() -> void:
 		frame = 4
 	else:
 		frame = 5
+	_set_jump_frame(frame)
+
+
+func _update_swing_frame() -> void:
+	var sequence_index := int(_swing_elapsed / SWING_FRAME_DURATION) % SWING_FRAME_SEQUENCE.size()
+	_set_jump_frame(SWING_FRAME_SEQUENCE[sequence_index])
+
+
+func _set_jump_frame(frame: int) -> void:
 	_jump.frame = frame
-	# Align the landing soles to the unchanged feet origin.
-	var sole_rows: Array[float] = [492.0, 467.0, 404.0, 386.0, 448.0, 470.0, 474.0, 475.0]
-	_jump.position.y = -191.25 + (466.0 - sole_rows[frame]) * 0.9107143
+	# Keep the art aligned to the existing feet origin without moving the player.
+	_jump.position.y = -191.25 + (466.0 - JUMP_SOLE_ROWS[frame]) * 0.9107143
 
 
 func _on_jump_started(_unused: Variant = null) -> void:
 	_airborne_visual = true
 	_takeoff_timer = 0.075
 	_landing_timer = 0.0
+	_swing_elapsed = 0.0
+
+
+func _on_grapple_attached(_creature: Node2D) -> void:
+	_airborne_visual = true
+	_takeoff_timer = 0.0
+	_landing_timer = 0.0
+	_swing_elapsed = 0.0
 
 
 func _on_landed(_impact: float = 0.0) -> void:

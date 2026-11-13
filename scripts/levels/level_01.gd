@@ -49,6 +49,8 @@ extends Node2D
 # level bounds, so the camera never reveals sky outside the playable strip.
 
 const ACTION_RESTART := &"restart"
+const ACTION_MOVE_LEFT := &"move_left"
+const ACTION_MOVE_RIGHT := &"move_right"
 const WIND_AMBIENCE: AudioStream = preload("res://assets/audio/sfx/stratos_v1/loops/floating_island_wind_loop.wav")
 const SOUND_RESPAWN: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/player_respawn.wav")
 const SOUND_COMPLETE: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/level_complete.wav")
@@ -59,9 +61,10 @@ const LIMIT_RIGHT: float = 5560.0
 const LIMIT_BOTTOM: float = 200.0
 const TUTORIAL_END_X: float = 760.0 ## past the first Sky Skimmer encounter
 
-const HINT_SECONDS: float = 8.0 ## the control hint fades out after this much playing time
+const HINT_SECONDS: float = 8.0 ## completed control summary stays visible this long
 
 enum State { PLAYING, WON }
+enum TutorialStep { MOVE, JUMP, GRAPPLE, RELEASE, COMPLETE }
 
 @export var respawn_position: Vector2 = Vector2(100.0, 0.0) ## inside the entrance portal ring
 
@@ -80,6 +83,8 @@ enum State { PLAYING, WON }
 var _state: State = State.PLAYING
 var _elapsed: float = 0.0
 var _tutorial_completed: bool = false
+var _tutorial_step: TutorialStep = TutorialStep.MOVE
+var _hint_elapsed: float = 0.0
 var _controller_prompts: bool = false
 var _coin_count: int = 0
 var _special_coin_count: int = 0
@@ -97,11 +102,14 @@ func _ready() -> void:
 
 	_death_plane.body_entered.connect(_on_death)
 	_exit_area.body_entered.connect(_on_exit)
+	_player.visual_jump.connect(_on_tutorial_jump)
 	_player.grapple_attached.connect(_on_first_grapple_attached)
+	_player.grapple_released.connect(_on_first_grapple_released)
 	_restart_button.pressed.connect(_restart)
 	_setup_level_audio()
 	_victory.visible = false
 	_update_collectible_hud()
+	_configure_control_hint()
 	_update_control_prompts()
 
 	_respawn()
@@ -130,6 +138,12 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventKey and event.is_pressed() and not event.is_echo():
 		_set_controller_prompts(false)
 
+	if _tutorial_step == TutorialStep.MOVE and (
+		event.is_action_pressed(ACTION_MOVE_LEFT)
+		or event.is_action_pressed(ACTION_MOVE_RIGHT)
+	):
+		_set_tutorial_step(TutorialStep.JUMP)
+
 
 func _set_controller_prompts(controller: bool) -> void:
 	if _controller_prompts == controller:
@@ -142,20 +156,61 @@ func _update_control_prompts() -> void:
 	if _hint == null or _tutorial_ui == null:
 		return
 	if _controller_prompts:
-		_hint.text = "LEFT STICK — MOVE     A — JUMP     RT — HOLD TO GRAPPLE     MENU — RESTART"
+		match _tutorial_step:
+			TutorialStep.MOVE:
+				_hint.text = "1/4  MOVE  •  LEFT STICK OR D-PAD"
+			TutorialStep.JUMP:
+				_hint.text = "2/4  JUMP  •  A"
+			TutorialStep.GRAPPLE:
+				_hint.text = "3/4  HOLD RT NEAR A GLOWING SKY SKIMMER"
+			TutorialStep.RELEASE:
+				_hint.text = "4/4  RELEASE RT TO KEEP YOUR MOMENTUM"
+			TutorialStep.COMPLETE:
+				_hint.text = "LEFT STICK MOVE   A JUMP   HOLD RT GRAPPLE   RELEASE TO SWING   MENU RESTART"
 		_tutorial_ui.set_controller_prompts(true)
 	else:
-		_hint.text = "A / D  move     SPACE  jump     E  grapple (hold)     R  restart"
+		match _tutorial_step:
+			TutorialStep.MOVE:
+				_hint.text = "1/4  MOVE  •  A / D OR ARROWS"
+			TutorialStep.JUMP:
+				_hint.text = "2/4  JUMP  •  SPACE"
+			TutorialStep.GRAPPLE:
+				_hint.text = "3/4  HOLD E NEAR A GLOWING SKY SKIMMER"
+			TutorialStep.RELEASE:
+				_hint.text = "4/4  RELEASE E TO KEEP YOUR MOMENTUM"
+			TutorialStep.COMPLETE:
+				_hint.text = "A / D MOVE   SPACE JUMP   HOLD E GRAPPLE   RELEASE TO SWING   R RESTART"
 		_tutorial_ui.set_controller_prompts(false)
+
+
+func _configure_control_hint() -> void:
+	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_hint.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_hint.offset_top = -24.0
+	_hint.offset_bottom = -8.0
+	_hint.clip_text = true
+	_hint.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_hint.add_theme_font_size_override("font_size", 10)
+
+
+func _set_tutorial_step(step: TutorialStep) -> void:
+	if _tutorial_step == step:
+		return
+	_tutorial_step = step
+	_hint_elapsed = 0.0
+	_hint.visible = true
+	_hint.modulate.a = 1.0
+	_update_control_prompts()
 
 
 func _process(delta: float) -> void:
 	if _state == State.PLAYING:
 		_elapsed += delta
-		if not _tutorial_completed and _player.global_position.x >= TUTORIAL_END_X:
+		if not _tutorial_completed and not _player.is_grappling and _player.global_position.x >= TUTORIAL_END_X:
 			_complete_tutorial_sign()
-	if _hint.visible:
-		if _elapsed > HINT_SECONDS:
+	if _tutorial_step == TutorialStep.COMPLETE and _hint.visible:
+		_hint_elapsed += delta
+		if _hint_elapsed > HINT_SECONDS:
 			_hint.modulate.a = maxf(0.0, _hint.modulate.a - delta * 1.5)
 			if _hint.modulate.a <= 0.0:
 				_hint.visible = false
@@ -176,8 +231,10 @@ func _restart() -> void:
 func _respawn() -> void:
 	_state = State.PLAYING
 	_elapsed = 0.0
+	if _tutorial_step == TutorialStep.RELEASE:
+		_set_tutorial_step(TutorialStep.GRAPPLE)
 	_victory.visible = false
-	_hint.visible = true
+	_hint.visible = _tutorial_step != TutorialStep.COMPLETE or _hint_elapsed < HINT_SECONDS
 	_hint.modulate.a = 1.0
 
 	_player.set_physics_process(true)
@@ -218,8 +275,21 @@ func _on_exit(body: Node2D) -> void:
 	_victory.visible = true
 
 
+func _on_tutorial_jump() -> void:
+	if _tutorial_step == TutorialStep.MOVE or _tutorial_step == TutorialStep.JUMP:
+		_set_tutorial_step(TutorialStep.GRAPPLE)
+
+
 func _on_first_grapple_attached(_creature: Node2D) -> void:
+	if _tutorial_step != TutorialStep.COMPLETE:
+		_set_tutorial_step(TutorialStep.RELEASE)
+
+
+func _on_first_grapple_released(_creature: Node2D) -> void:
+	if _tutorial_step == TutorialStep.COMPLETE:
+		return
 	_complete_tutorial_sign()
+	_set_tutorial_step(TutorialStep.COMPLETE)
 
 
 func _complete_tutorial_sign() -> void:
