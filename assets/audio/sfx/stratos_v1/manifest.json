@@ -1,0 +1,205 @@
+{
+  "sample_rate": 48000,
+  "format": "WAV PCM 16-bit stereo",
+  "master_gain_recommendation": "Start Audio bus SFX at -6 dB; adjust in-game. Loop ambience at lower level.",
+  "assets": [
+    {
+      "file": "floating_island_wind_loop.wav",
+      "folder": "loops",
+      "duration_seconds": 4.0,
+      "loop": true,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "grapple_swing_loop.wav",
+      "folder": "loops",
+      "duration_seconds": 2.4,
+      "loop": true,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "portal_ambient_loop.wav",
+      "folder": "loops",
+      "duration_seconds": 3.2,
+      "loop": true,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "sky_skimmer_flap_loop.wav",
+      "folder": "loops",
+      "duration_seconds": 2.0,
+      "loop": true,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "waterfall_loop.wav",
+      "folder": "loops",
+      "duration_seconds": 3.0,
+      "loop": true,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "coin_pickup.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.68,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "grapple_attach.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.32,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "grapple_launch.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.36,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "grapple_miss.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.26,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "grapple_release.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.42,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "level_complete.wav",
+      "folder": "sfx",
+      "duration_seconds": 1.65,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "player_footstep_01.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.19,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "player_footstep_02.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.19,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "player_jump.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.48,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "player_land_heavy.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.46,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "player_land_soft.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.32,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "player_respawn.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.78,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "portal_enter.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.95,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "portal_exit.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.95,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "sky_skimmer_chirp.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.52,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "special_coin_pickup.wav",
+      "folder": "sfx",
+      "duration_seconds": 1.15,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    },
+    {
+      "file": "ui_confirm.wav",
+      "folder": "sfx",
+      "duration_seconds": 0.16,
+      "loop": false,
+      "sample_rate": 48000,
+      "channels": 2,
+      "subtype": "PCM_16"
+    }
+  ]
+}

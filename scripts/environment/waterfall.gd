@@ -2,6 +2,8 @@
 extends Node2D
 
 const FRAME_RATE: float = 8.0
+const WATERFALL_AMBIENCE: AudioStream = preload("res://assets/audio/sfx/stratos_v1/loops/waterfall_loop.wav")
+const AUDIBLE_DISTANCE := 150.0
 
 @export_range(0.1, 30.0, 0.1) var animation_speed: float = 8.0:
 	set(value):
@@ -24,9 +26,47 @@ const FRAME_RATE: float = 8.0
 		_apply_settings()
 
 
+var _audio: AudioStreamPlayer2D = null
+var _audio_fade: Tween = null
+var _audio_active: bool = false
+
+
 func _ready() -> void:
 	_apply_settings()
+	if Engine.is_editor_hint():
+		return
+	_audio = AudioStreamPlayer2D.new()
+	_audio.name = "WaterfallAmbience"
+	_audio.bus = "Ambience"
+	_audio.max_distance = AUDIBLE_DISTANCE
+	_audio.volume_db = -12.0
+	var loop_stream: AudioStreamWAV = WATERFALL_AMBIENCE.duplicate() as AudioStreamWAV
+	loop_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	loop_stream.loop_end = int(loop_stream.get_length() * loop_stream.mix_rate)
+	_audio.stream = loop_stream
+	add_child(_audio)
 
+
+func _process(_delta: float) -> void:
+	if Engine.is_editor_hint() or _audio == null:
+		return
+	var player: Node2D = get_tree().get_first_node_in_group("player") as Node2D
+	var nearby: bool = player != null and global_position.distance_to(player.global_position) <= AUDIBLE_DISTANCE
+	if nearby == _audio_active:
+		return
+	_audio_active = nearby
+	if _audio_fade != null and _audio_fade.is_running():
+		_audio_fade.kill()
+	if nearby:
+		if not _audio.playing:
+			_audio.volume_db = -12.0
+			_audio.play()
+		_audio_fade = create_tween()
+		_audio_fade.tween_property(_audio, "volume_db", 0.0, 0.22)
+	else:
+		_audio_fade = create_tween()
+		_audio_fade.tween_property(_audio, "volume_db", -40.0, 0.22)
+		_audio_fade.tween_callback(_audio.stop)
 
 func _apply_settings() -> void:
 	var sprite := get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D

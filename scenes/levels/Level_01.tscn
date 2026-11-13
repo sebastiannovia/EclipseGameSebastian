@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dnysc2rygn0i8" path="res://scripts/levels/level_01.gd" id="1_level"]
 [ext_resource type="Script" uid="uid://bjvh4ayku2ees" path="res://scripts/levels/float_island.gd" id="2_island"]
 [ext_resource type="Script" uid="uid://caijd4fw6tg32" path="res://scripts/levels/portal.gd" id="3_portal"]
-[ext_resource type="PackedScene" path="res://scenes/player/Player.tscn" id="5_player"]
+[ext_resource type="PackedScene" uid="uid://d1gm2as503gpm" path="res://scenes/player/Player.tscn" id="5_player"]
 [ext_resource type="PackedScene" path="res://scenes/objects/FlyingCreature.tscn" id="6_creature"]
 [ext_resource type="Script" uid="uid://dl6h1rmsvidwq" path="res://scripts/levels/grapple_tutorial.gd" id="7_tutorial"]
 [ext_resource type="PackedScene" path="res://scenes/objects/Coin.tscn" id="8_dwcxj"]
@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" path="res://scenes/environment/Waterfall.tscn" id="25_waterfall"]
 [ext_resource type="Texture2D" uid="uid://c66fkgmrccs7b" path="res://assets/art/portals/fluid_vortex_v5/entry/frame_static/entry_frame_static_no_core.png" id="26_portal_entry_frame"]
 [ext_resource type="Texture2D" uid="uid://c1hx1rhbtcqv8" path="res://assets/art/portals/fluid_vortex_v5/exit/frame_static/exit_frame_static_no_core_mirrored.png" id="27_portal_exit_frame"]
+[ext_resource type="Script" uid="uid://ybcojwwfgq65" path="res://scripts/effects/world_effects.gd" id="90_world_effects"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nafxw"]
 shader = ExtResource("8_tj285")
@@ -1082,3 +1083,6 @@ texture = ExtResource("27_portal_exit_frame")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Portales/ExitPortal/Area2D" unique_id=1194881242]
 position = Vector2(0, -48)
 shape = SubResource("RectExitTrigger")
+
+[node name="WorldEffects" type="Node2D" parent="." unique_id=1342319175]
+script = ExtResource("90_world_effects")

@@ -25,12 +25,31 @@ class_name Portal
 const SPARK_ORBIT: float = 1.16 ## ring radii are multiplied by this to place the sparks just outside the ring
 const SPARK_LENGTH: float = 5.0
 const SPARK_WIDTH: float = 2.2
+const PORTAL_AMBIENCE: AudioStream = preload("res://assets/audio/sfx/stratos_v1/loops/portal_ambient_loop.wav")
+const PORTAL_AUDIBLE_DISTANCE := 320.0
 
 var _elapsed: float = 0.0
+var _ambience: AudioStreamPlayer2D = null
+var _ambience_fade: Tween = null
+var _ambience_active: bool = false
+
+
+func _ready() -> void:
+	_ambience = AudioStreamPlayer2D.new()
+	_ambience.name = "PortalAmbience"
+	_ambience.bus = "Ambience"
+	_ambience.max_distance = PORTAL_AUDIBLE_DISTANCE
+	_ambience.volume_db = -12.0
+	var loop_stream: AudioStreamWAV = PORTAL_AMBIENCE.duplicate() as AudioStreamWAV
+	loop_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	loop_stream.loop_end = int(loop_stream.get_length() * loop_stream.mix_rate)
+	_ambience.stream = loop_stream
+	add_child(_ambience)
 
 
 func _process(delta: float) -> void:
 	_elapsed += delta
+	_update_ambience()
 	if get_node_or_null("PortalArtwork") == null:
 		queue_redraw()
 
@@ -122,3 +141,29 @@ func _draw_sparks(centre: Vector2, rx: float, ry: float) -> void:
 			point - tangent * SPARK_LENGTH * 0.5 - normal * SPARK_WIDTH * 0.5,
 			point + tangent * SPARK_LENGTH * 0.5 - normal * SPARK_WIDTH * 0.5,
 		]), color)
+
+
+func _update_ambience() -> void:
+	if _ambience == null:
+		return
+	var player: Node2D = get_tree().get_first_node_in_group("player") as Node2D
+	var nearby: bool = player != null and global_position.distance_to(player.global_position) <= PORTAL_AUDIBLE_DISTANCE
+	if nearby == _ambience_active:
+		return
+	_ambience_active = nearby
+	if _ambience_fade != null and _ambience_fade.is_running():
+		_ambience_fade.kill()
+	if nearby:
+		if not _ambience.playing:
+			_ambience.volume_db = -12.0
+			_ambience.play()
+		_ambience_fade = create_tween()
+		_ambience_fade.tween_property(_ambience, "volume_db", 0.0, 0.22)
+	else:
+		_ambience_fade = create_tween()
+		_ambience_fade.tween_property(_ambience, "volume_db", -40.0, 0.2)
+		_ambience_fade.tween_callback(_ambience.stop)
+
+func _exit_tree() -> void:
+	if _ambience != null:
+		_ambience.stop()

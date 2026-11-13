@@ -22,6 +22,19 @@ const ACTION_JUMP := &"jump"
 const ACTION_GRAPPLE := &"grapple"
 
 const GRAPPLE_GROUP := &"grappleable" ## every creature that can be hooked joins this group
+const LAND_HEAVY_SPEED := 330.0
+const STEP_DISTANCE := 32.0
+
+const SOUND_JUMP: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/player_jump.wav")
+const SOUND_STEP_A: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/player_footstep_01.wav")
+const SOUND_STEP_B: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/player_footstep_02.wav")
+const SOUND_LAND_SOFT: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/player_land_soft.wav")
+const SOUND_LAND_HEAVY: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/player_land_heavy.wav")
+const SOUND_LAUNCH: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/grapple_launch.wav")
+const SOUND_ATTACH: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/grapple_attach.wav")
+const SOUND_MISS: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/grapple_miss.wav")
+const SOUND_RELEASE: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/grapple_release.wav")
+const SOUND_SWING: AudioStream = preload("res://assets/audio/sfx/stratos_v1/loops/grapple_swing_loop.wav")
 
 ## Where the rope is tied to the body and where its length is measured from. The
 ## body origin is the feet, so the tie sits on the chest.
@@ -35,6 +48,8 @@ const ROPE_SLACK: float = 0.5
 ## Visuals and the creatures themselves subscribe; nothing here draws anything.
 signal grapple_attached(creature: Node2D)
 signal grapple_released(creature: Node2D)
+signal visual_jump
+signal visual_landing(impact: float)
 
 ## True while the rope is attached. Public so animation/VFX code can read it.
 var is_grappling: bool = false
@@ -78,6 +93,11 @@ var _hook_armed: bool = false
 # Creature currently showing the "in range" beacon, so it can be turned off again
 # instead of every creature redrawing it every frame.
 var _hinted: Node2D = null
+var _audio_players: Dictionary = {}
+var _step_distance: float = 0.0
+var _step_alternate: bool = false
+var _swing_fade: Tween = null
+var _swing_audio_active: bool = false
 
 
 func _ready() -> void:
@@ -87,6 +107,8 @@ func _ready() -> void:
 		config = PlayerConfig.new()
 	velocity = Vector2.ZERO
 	is_grappling = false
+	add_to_group("player")
+	_create_audio_players()
 
 
 ## The project stores InputMap events by numeric enum value; keep this guard in
@@ -108,6 +130,9 @@ func _physics_process(delta: float) -> void:
 	# assist timers are refreshed before anything can consume them.
 	_refresh_coyote_time(delta)
 	_refresh_jump_buffer(delta)
+	var was_on_floor: bool = is_on_floor()
+	var landing_speed: float = velocity.y
+	var old_x: float = global_position.x
 	_update_hook()
 	if is_grappling:
 		# While attached the rope owns the horizontal motion: gravity still pulls,
@@ -121,6 +146,8 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if is_grappling:
 		_reel_onto_arc()
+	_update_swing_audio()
+	_update_movement_audio(was_on_floor, landing_speed, old_x)
 
 
 # --- movement ---------------------------------------------------------------
@@ -168,6 +195,9 @@ func _start_pending_jump() -> void:
 	if _jump_buffer_remaining <= 0.0 or _coyote_remaining <= 0.0:
 		return
 	velocity.y = config.jump_velocity
+	_play_audio("jump", SOUND_JUMP)
+	visual_jump.emit()
+	_step_distance = 0.0
 	_jump_buffer_remaining = 0.0
 	_coyote_remaining = 0.0
 	_jump_needs_cut = true
@@ -191,7 +221,8 @@ func _cut_jump_on_release() -> void:
 ## Reads E, decides what the hook is tied to, and tries to land it. Runs before
 ## motion so the swing always uses this tick's anchor position.
 func _update_hook() -> void:
-	if Input.is_action_just_pressed(ACTION_GRAPPLE):
+	var grapple_pressed: bool = Input.is_action_just_pressed(ACTION_GRAPPLE)
+	if grapple_pressed:
 		_hook_armed = true
 	if is_grappling and not Input.is_action_pressed(ACTION_GRAPPLE):
 		_detach()
@@ -203,6 +234,11 @@ func _update_hook() -> void:
 	else:
 		_candidate = _find_candidate()
 
+	if grapple_pressed and not is_grappling:
+		if _candidate != null:
+			_play_audio("launch", SOUND_LAUNCH)
+		else:
+			_play_audio("miss", SOUND_MISS)
 	if _hook_armed and not is_grappling and _candidate != null:
 		_attach(_candidate)
 
@@ -266,6 +302,7 @@ func _attach(creature: Node2D) -> void:
 	_jump_needs_cut = false
 	if creature.has_method("on_hooked"):
 		creature.call("on_hooked")
+	_play_audio("attach", SOUND_ATTACH)
 	grapple_attached.emit(creature)
 
 
@@ -284,6 +321,7 @@ func _detach() -> void:
 	_hook_armed = Input.is_action_pressed(ACTION_GRAPPLE)
 	if released.has_method("on_released"):
 		released.call("on_released")
+	_play_audio("release", SOUND_RELEASE)
 	grapple_released.emit(released)
 
 
@@ -358,6 +396,7 @@ func _publish_beacons() -> void:
 ## Drop the rope and the hook without emitting signals: used by the level on
 ## respawn and on victory, where the level handles the velocity itself.
 func clear_grapple_state() -> void:
+	_stop_swing_audio(true)
 	if _creature != null and _creature.has_method("on_released"):
 		_creature.call("on_released")
 	_creature = null
@@ -413,3 +452,82 @@ func get_anchor_position() -> Vector2:
 
 func get_rope_length() -> float:
 	return _rope_length
+
+
+func _create_audio_players() -> void:
+	for key in ["jump", "steps", "landing", "launch", "attach", "miss", "release"]:
+		var player := AudioStreamPlayer.new()
+		player.name = "Audio_" + str(key)
+		player.bus = "SFX"
+		player.volume_db = -2.0
+		add_child(player)
+		_audio_players[key] = player
+	var swing := AudioStreamPlayer.new()
+	swing.name = "Audio_GrappleSwing"
+	swing.bus = "Ambience"
+	var swing_stream: AudioStreamWAV = SOUND_SWING.duplicate() as AudioStreamWAV
+	swing_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	swing_stream.loop_end = int(swing_stream.get_length() * swing_stream.mix_rate)
+	swing.stream = swing_stream
+	swing.volume_db = -12.0
+	add_child(swing)
+	_audio_players["swing"] = swing
+
+
+func _play_audio(key: String, stream: AudioStream) -> void:
+	var player: AudioStreamPlayer = _audio_players.get(key) as AudioStreamPlayer
+	if player == null:
+		return
+	player.stream = stream
+	player.play()
+
+
+func _update_movement_audio(was_on_floor: bool, landing_speed: float, old_x: float) -> void:
+	if not was_on_floor and is_on_floor():
+		visual_landing.emit(landing_speed)
+		_play_audio("landing", SOUND_LAND_HEAVY if landing_speed >= LAND_HEAVY_SPEED else SOUND_LAND_SOFT)
+		_step_distance = 0.0
+	if is_on_floor() and not is_grappling and absf(Input.get_axis(ACTION_MOVE_LEFT, ACTION_MOVE_RIGHT)) > 0.1:
+		_step_distance += absf(global_position.x - old_x)
+		if _step_distance >= STEP_DISTANCE:
+			_step_distance = fmod(_step_distance, STEP_DISTANCE)
+			_step_alternate = not _step_alternate
+			_play_audio("steps", SOUND_STEP_A if _step_alternate else SOUND_STEP_B)
+	elif not is_on_floor():
+		_step_distance = 0.0
+
+
+func _update_swing_audio() -> void:
+	var player: AudioStreamPlayer = _audio_players.get("swing") as AudioStreamPlayer
+	if player == null:
+		return
+	if is_grappling and not _swing_audio_active:
+		_swing_audio_active = true
+		if _swing_fade != null and _swing_fade.is_running():
+			_swing_fade.kill()
+		if not player.playing:
+			player.volume_db = -12.0
+			player.play()
+		_swing_fade = create_tween()
+		_swing_fade.tween_property(player, "volume_db", 0.0, 0.18)
+	elif not is_grappling and _swing_audio_active:
+		_stop_swing_audio(false)
+
+
+func _stop_swing_audio(immediate: bool) -> void:
+	_swing_audio_active = false
+	var player: AudioStreamPlayer = _audio_players.get("swing") as AudioStreamPlayer
+	if player == null or not player.playing:
+		return
+	if _swing_fade != null and _swing_fade.is_running():
+		_swing_fade.kill()
+	if immediate:
+		player.stop()
+		return
+	_swing_fade = create_tween()
+	_swing_fade.tween_property(player, "volume_db", -40.0, 0.12)
+	_swing_fade.tween_callback(player.stop)
+
+
+func _exit_tree() -> void:
+	_stop_swing_audio(true)

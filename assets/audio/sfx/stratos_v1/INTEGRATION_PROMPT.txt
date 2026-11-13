@@ -1,0 +1,123 @@
+# STRATOS – Integrate Original Sound Effects Pack v1
+
+I am providing `STRATOS_Sound_Effects_v1.zip`.
+
+This pack contains original WAV effects for the existing STRATOS systems. Integrate audio without changing gameplay behaviour.
+
+## 1. Inspect first
+
+Inspect the current Godot 4.7.2 project, especially:
+- Player scene and `player.gd` / `player_visuals.gd`.
+- Grapple attach, launch, release, miss, and swing state transitions.
+- Sky Skimmer scene/script and animation/patrol state.
+- Coin and special collectible scenes/scripts.
+- Entry and exit portal scenes/scripts.
+- Level fall/respawn and victory flow.
+- Existing waterfalls and their scene instances.
+- Existing AudioStreamPlayers, buses, and project audio settings.
+
+Do not assume paths or method names. Identify the real event points before wiring audio.
+
+## 2. Install assets
+
+Extract into:
+`res://assets/audio/sfx/stratos_v1/`
+
+Keep the `sfx/`, `loops/`, `manifest.json`, and README structure. Use WAV imports as supplied; do not transcode or reduce the 48 kHz / 16-bit source quality. Do not normalize all files again unless a measured in-game mix requires it.
+
+## 3. Audio buses and players
+
+Create or reuse buses:
+- `Master`
+- `SFX` for one-shot effects
+- `Ambience` for continuous loops
+
+Recommended initial level:
+- SFX bus: 0 dB relative baseline; individual clips can be adjusted.
+- Ambience: start 12–18 dB quieter than one-shots.
+
+Use reusable AudioStreamPlayers or small audio helper nodes. Avoid creating a new AudioStreamPlayer node on every frame. Allow appropriate overlap for coin pickups or footsteps, and prevent accidental stacking of the same loop.
+
+For 2D positional sources, use AudioStreamPlayer2D when location matters (coins, portals, Sky Skimmer, waterfalls). Use global AudioStreamPlayer for UI, player feedback and level completion where positional audio is not needed.
+
+## 4. Event mapping
+
+Player movement:
+- `player_jump.wav`: on the actual jump-start event, once per jump.
+- `player_footstep_01.wav` and `player_footstep_02.wav`: alternate on grounded footfall events while horizontal movement is active. Do not use a simple timer while airborne. If no footfall event exists, add a small visual-animation/event callback or grounded distance-based step cadence; do not change physics.
+- `player_land_soft.wav`: ordinary landing.
+- `player_land_heavy.wav`: hard landing, selected from impact velocity. Never play both for one landing.
+- `player_respawn.wav`: once after the existing respawn/reposition has completed.
+
+Grapple:
+- `grapple_launch.wav`: when an eligible grapple attempt actually launches.
+- `grapple_attach.wav`: only when a creature anchor successfully attaches.
+- `grapple_miss.wav`: when the current grapple system reports a failed/no-target attempt, if such an event exists and is player-feedback relevant.
+- `grapple_swing_loop.wav`: loop only while the rope is attached and the player is swinging. Fade in/out smoothly; stop immediately on detach, release, death/respawn, or scene exit. Never let it continue after the grapple ends.
+- `grapple_release.wav`: exactly once when the player releases the rope, preserving existing momentum logic.
+
+Sky Skimmer:
+- `sky_skimmer_chirp.wav`: occasional short call while a nearby creature is visible/relevant, not every physics frame.
+- `sky_skimmer_flap_loop.wav`: low-volume loop while a creature is close enough to be audible/on screen. Avoid starting one loud loop for every off-screen creature. Fade when it leaves audible range.
+
+Collectibles:
+- `coin_pickup.wav`: when a normal coin is actually collected (not on overlap attempt if pickup is rejected).
+- `special_coin_pickup.wav`: when the special collectible is actually collected.
+
+Portals and game state:
+- `portal_ambient_loop.wav`: loop while the relevant portal is active/nearby; fade rather than abruptly start/stop if simple to do.
+- `portal_enter.wav`: on the existing entry/transition event only.
+- `portal_exit.wav`: on the existing exit/emergence event only, not as a duplicate of victory.
+- `level_complete.wav`: once when the existing victory state is triggered.
+- `ui_confirm.wav`: tutorial Continue / existing UI confirmation only. Do not add new menu logic.
+
+Environment:
+- `waterfall_loop.wav`: attach to existing animated waterfall instances, ideally positional. Reuse one loop per nearby audible waterfall or share a carefully balanced ambience source if individual instances would overmix. Fade with distance or visibility where practical.
+- `floating_island_wind_loop.wav`: low-level world ambience, at most one global loop. Keep it subtle and do not let it mask grapple/coin cues.
+
+## 5. Mix and playback rules
+
+- All long ambience assets in `loops/` are seamless-intended loops; use `loop = true` / autoplay only when their corresponding source is active.
+- Prevent duplicate loop instances when scenes reload or creatures are re-instanced.
+- Use short fades (roughly 0.1–0.3 s) for ambient loop transitions.
+- Keep UI and gameplay cues readable on desktop and ROG Ally speakers.
+- Keep coin/special-coin and grapple-attach cues distinct.
+- Do not let multiple footstep sounds stack continuously at high volume.
+- Do not add background music; this package is SFX and ambience only.
+- Preserve stereo where useful, but positional 2D sources may be mono/engine-spatialized as appropriate.
+- Keep the final mix below clipping; test simultaneous sounds (grapple + coin + ambience).
+- Use a centralized volume multiplier or bus controls if the project already has one. Do not add an unnecessary settings menu.
+
+## 6. Strict preservation
+
+Do NOT change:
+- Player movement/physics or config values.
+- Grapple range, rope length, swing forces, attachment rules or signals.
+- Sky Skimmer movement/patrol/anchor positions.
+- Coin values, collision shapes or collection logic.
+- Portal triggers, positions, collision shapes, spawn/exit/victory logic.
+- Level geometry, camera, parallax, platform collisions.
+- HUD layout, tutorial layout or input mappings.
+
+Only add audio resources, bus settings, AudioStreamPlayers, and the minimum event hooks needed to play the sounds.
+Do not add unrelated systems or refactor the project.
+
+## 7. Verify in Godot 4.7.2
+
+Run the project and verify:
+1. No missing audio resource/import errors.
+2. Every one-shot triggers exactly once at the intended event.
+3. Loops start and stop with their source states.
+4. Swing loop stops immediately on release/respawn.
+5. Footsteps never play while airborne or stationary.
+6. Normal and special coin sounds are distinct.
+7. Entry, exit and victory cues do not duplicate.
+8. Ambient loops are subtle and do not mask feedback.
+9. Simultaneous effects do not clip or become harsh.
+10. Desktop and ROG Ally playback are balanced.
+
+Do not use bots or automated full-level gameplay simulations. Manually perform focused checks only. Do not make Git commits.
+
+## 8. Final report
+
+List exact modified files, bus names, event-to-sound mapping, loop lifecycle handling, and which checks were actually run. If Godot runtime testing is unavailable, state that clearly. Do not claim full verification from static inspection alone.

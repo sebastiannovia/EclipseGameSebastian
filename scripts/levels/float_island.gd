@@ -1,17 +1,17 @@
+@tool
 extends StaticBody2D
 class_name FloatIsland
 
-# Temporary art for a level platform: a grass-topped floating island drawn from
-# the platform's own RectangleShape2D, so the visible geometry can never drift
-# out of step with the collision box.
-#
-# Convention inherited from the movement bench: the StaticBody2D sits at the
-# centre of its rectangle and the rectangle is 40 px thick, so the walking
-# surface is 20 px above the node. All drawing here happens in that same local
-# space. The dirt skirt hangs *below* the collider and the grass cap sits on the
-# collider's own top face: nothing the player can stand on is invisible, and
-# nothing visible is solid.
+# Native atlas regions use the generated PNG artwork without procedural drawing.
+const CUTOUT: Shader = preload("res://shaders/terrain_cutout.gdshader")
+const LONG: Texture2D = preload("res://assets/art/terrain_redesign_v2/platform_long.tres")
+const MEDIUM: Texture2D = preload("res://assets/art/terrain_redesign_v2/platform_medium.tres")
+const SMALL: Texture2D = preload("res://assets/art/terrain_redesign_v2/platform_small.tres")
+const SLAB: Texture2D = preload("res://assets/art/terrain_redesign_v2/rock_slab.tres")
+const COLUMN: Texture2D = preload("res://assets/art/terrain_redesign_v2/rock_column.tres")
+const CEILING: Texture2D = preload("res://assets/art/terrain_redesign_v2/rock_ceiling.tres")
 
+# Retained for compatibility with existing scene properties.
 @export var grass_color: Color = Color(0.52, 0.80, 0.38, 1.0)
 @export var grass_lit_color: Color = Color(0.79, 0.95, 0.55, 1.0)
 @export var dirt_color: Color = Color(0.36, 0.25, 0.44, 1.0)
@@ -21,147 +21,77 @@ class_name FloatIsland
 @export_range(0.0, 60.0, 1.0) var skirt_depth: float = 22.0 ## how far the tapered underside hangs below the collider
 @export_range(2.0, 20.0, 1.0) var grass_thickness: float = 7.0
 
-var _half_size: Vector2 = Vector2.ZERO
-var _shape_offset: Vector2 = Vector2.ZERO
+
+var _artwork: Sprite2D
+var _last_geometry: Array = []
 
 
 func _ready() -> void:
-	var shape_node: CollisionShape2D = get_node_or_null("CollisionShape2D") as CollisionShape2D
-	if shape_node == null or shape_node.shape == null:
-		push_warning("%s has no CollisionShape2D to match its artwork to." % name)
+	_update_artwork()
+	set_process(Engine.is_editor_hint())
+
+
+func _process(_delta: float) -> void:
+	_update_artwork()
+
+
+func _update_artwork() -> void:
+	var collider := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if collider == null or not collider.shape is RectangleShape2D:
 		return
-	var rect: RectangleShape2D = shape_node.shape as RectangleShape2D
-	if rect == null:
-		push_warning("%s collision shape is not a RectangleShape2D." % name)
+	var rect := collider.shape as RectangleShape2D
+	var axis_x: float = collider.global_transform.x.length()
+	var axis_y: float = collider.global_transform.y.length()
+	if axis_x <= 0.001 or axis_y <= 0.001:
 		return
-	_half_size = rect.size * 0.5
-	_shape_offset = shape_node.position
-
-	# Only walkable islands get the new grass art. Formation bodies keep their
-	# existing procedural stone rendering below.
-	if get_parent() == null or get_parent().name != "Islands":
+	var islands: bool = get_parent() != null and get_parent().name == "Islands"
+	var geometry: Array = [rect.size, collider.transform, axis_x, axis_y, islands, name, get_index()]
+	if geometry == _last_geometry and is_instance_valid(_artwork):
 		return
+	_last_geometry = geometry
+	if not is_instance_valid(_artwork):
+		_artwork = Sprite2D.new()
+		_artwork.name = "PlatformArtwork"
+		_artwork.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		_artwork.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
+		var material := ShaderMaterial.new()
+		material.shader = CUTOUT
+		_artwork.material = material
+		_artwork.z_index = -1
+		add_child(_artwork)
 
-	var texture_path: String = "res://assets/art/grass_platforms_v1/game_scale/platform_grass_small.png"
-	var visible_surface_row: float = 10.0
-	if rect.size.x >= 240.0:
-		texture_path = "res://assets/art/grass_platforms_v1/game_scale/platform_grass_long.png"
-		visible_surface_row = 22.0
-	elif rect.size.x >= 110.0:
-		texture_path = "res://assets/art/grass_platforms_v1/game_scale/platform_grass_medium.png"
-		visible_surface_row = 22.0
+	var texture: Texture2D = SMALL
+	var surface_y := 58.0
+	var solid_bottom := 210.0
+	var world_width: float = rect.size.x * axis_x
+	if islands:
+		if world_width >= 240.0:
+			texture = LONG
+			surface_y = 62.0
+		elif world_width >= 110.0:
+			texture = MEDIUM
+			surface_y = 63.0
+	else:
+		texture = SLAB
+		surface_y = 20.0
+		solid_bottom = 182.0
+		if rect.size.y * axis_y > world_width:
+			texture = COLUMN
+			surface_y = 53.0
+			solid_bottom = 373.0
+		elif name == &"RockCeiling":
+			texture = CEILING
+			surface_y = 12.0
+			solid_bottom = 82.0
 
-	var texture: Texture2D = load(texture_path) as Texture2D
-	if texture == null:
-		push_warning("%s could not load its grass platform texture." % name)
-		return
-
-	var sprite := Sprite2D.new()
-	sprite.name = "PlatformArtwork"
-	sprite.texture = texture
-	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
-	sprite.centered = true
-	var uniform_scale: float = rect.size.x / float(texture.get_width())
-	sprite.scale = Vector2.ONE * uniform_scale
-	# The supplied sprites include plants and stones above the flat grass plane.
-	# Align that plane, rather than the image's topmost decorative pixel, to the
-	# collision's upper edge. Keep the scale uniform so the art is not distorted.
-	var surface_offset_y: float = uniform_scale * (float(texture.get_height()) * 0.5 - visible_surface_row)
-	sprite.position = shape_node.position + Vector2(0.0, -rect.size.y * 0.5 + surface_offset_y)
-	sprite.z_index = -1
-	add_child(sprite)
-
-
-func _draw() -> void:
-	# Island surfaces use the supplied prefabs fitted above. Keep the established
-	# procedural art for the non-walkable rock formations.
-	if get_parent() != null and get_parent().name == "Islands":
-		return
-	if _half_size == Vector2.ZERO:
-		return
-	draw_set_transform(_shape_offset, 0.0, Vector2.ONE)
-
-	var left: float = -_half_size.x
-	var right: float = _half_size.x
-	var top: float = -_half_size.y
-	var bottom: float = _half_size.y
-	var skirt_y: float = bottom + skirt_depth
-	var taper: float = minf(14.0, _half_size.x * 0.45)
-
-	# Dirt body: full width at the walking surface, tapering inwards underneath.
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(left, top),
-		Vector2(right, top),
-		Vector2(right, bottom - 5.0),
-		Vector2(right - taper, skirt_y),
-		Vector2(left + taper, skirt_y),
-		Vector2(left, bottom - 5.0),
-	]), dirt_color)
-
-	# Shaded lower half, so the islands read as volumes and not as rectangles.
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(left, bottom - 6.0),
-		Vector2(right, bottom - 6.0),
-		Vector2(right - taper, skirt_y),
-		Vector2(left + taper, skirt_y),
-	]), dirt_dark_color)
-
-	# Lit rim down the left face: the sun sits on the left of every level view.
-	# Kept as two simple convex shapes; a single five-point strip here crossed
-	# itself where the taper began and the renderer refused to triangulate it.
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(left, top + grass_thickness),
-		Vector2(left + 4.0, top + grass_thickness),
-		Vector2(left + 4.0, bottom - 5.0),
-		Vector2(left, bottom - 5.0),
-	]), dirt_lit_color)
-
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(left, bottom - 5.0),
-		Vector2(left + taper, skirt_y),
-		Vector2(left + taper, bottom - 5.0),
-	]), dirt_lit_color)
-
-	# Grass cap: exactly the collider's width, so the visual edge is the real edge.
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(left, top),
-		Vector2(right, top),
-		Vector2(right, top + grass_thickness),
-		Vector2(left, top + grass_thickness),
-	]), grass_color)
-
-	# Bright band along the walking surface: the line the feet actually land on.
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(left, top),
-		Vector2(right, top),
-		Vector2(right, top + 2.0),
-		Vector2(left, top + 2.0),
-	]), grass_lit_color)
-
-	_draw_tufts(left, right, top)
-
-
-## A few blades on each end of the cap: they break the straight top edge and
-## make the platform edges obvious against the sky.
-func _draw_tufts(left: float, right: float, top: float) -> void:
-	var tuft_width: float = 3.0
-	var tuft_height: float = 4.0
-	for offset in 3:
-		var x: float = left + 4.0 + offset * (tuft_width + 2.0)
-		if x + tuft_width > right - 2.0:
-			break
-		draw_colored_polygon(PackedVector2Array([
-			Vector2(x, top),
-			Vector2(x + tuft_width, top),
-			Vector2(x + tuft_width * 0.5, top - tuft_height),
-		]), grass_lit_color)
-	for offset in 3:
-		var x: float = right - 4.0 - tuft_width - offset * (tuft_width + 2.0)
-		if x < left + 2.0:
-			break
-		draw_colored_polygon(PackedVector2Array([
-			Vector2(x, top),
-			Vector2(x + tuft_width, top),
-			Vector2(x + tuft_width * 0.5, top - tuft_height),
-		]), grass_color)
+	var scale_x: float = rect.size.x / texture.get_width()
+	var scale_y: float = scale_x * axis_x / axis_y
+	if not islands:
+		# Fit the solid stone band to the collider; moss and tips extend outside it.
+		scale_y = rect.size.y / (solid_bottom - surface_y)
+	_artwork.texture = texture
+	_artwork.rotation = collider.rotation
+	_artwork.scale = collider.scale * Vector2(scale_x, scale_y)
+	_artwork.flip_h = islands and get_index() % 2 == 1
+	var offset_y: float = scale_y * (texture.get_height() * 0.5 - surface_y)
+	_artwork.position = collider.transform * Vector2(0.0, -rect.size.y * 0.5 + offset_y)

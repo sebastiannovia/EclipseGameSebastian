@@ -16,6 +16,17 @@
 [ext_resource type="Texture2D" uid="uid://b473xgi8jmx24" path="res://assets/art/characters/player_ikaro/master_rig_v1/rig_parts/front_forearm_glove.png" id="14_front_forearm_glove"]
 [ext_resource type="Texture2D" uid="uid://bn7mk2syw0pla" path="res://assets/art/characters/player_ikaro/master_rig_v1/rig_parts/helmet_head.png" id="15_helmet_head"]
 
+[ext_resource type="Texture2D" path="res://assets/art/characters/player_ikaro/walk_run_v1/walk_run_8f.png" id="16_walk"]
+[ext_resource type="Shader" path="res://assets/art/characters/player_ikaro/walk_run_v1/character_cutout.gdshader" id="17_walk_cutout"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/player_ikaro/jump_v1/jump_8f.png" id="18_jump"]
+[ext_resource type="Shader" path="res://assets/art/characters/player_ikaro/jump_v1/character_cutout.gdshader" id="19_jump_cutout"]
+
+[sub_resource type="ShaderMaterial" id="WalkCutout"]
+shader = ExtResource("17_walk_cutout")
+
+[sub_resource type="ShaderMaterial" id="JumpCutout"]
+shader = ExtResource("19_jump_cutout")
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(16, 31)
 
@@ -152,3 +163,25 @@ centered = false
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=738630687]
 offset = Vector2(0, -12)
+
+[node name="WalkFrames" type="Sprite2D" parent="Visuals"]
+visible = false
+texture_filter = 1
+texture_repeat = 1
+material = SubResource("WalkCutout")
+position = Vector2(25.5, -191.25)
+scale = Vector2(0.9107143, 0.9107143)
+texture = ExtResource("16_walk")
+hframes = 4
+vframes = 2
+
+[node name="JumpFrames" type="Sprite2D" parent="Visuals"]
+visible = false
+texture_filter = 1
+texture_repeat = 1
+material = SubResource("JumpCutout")
+position = Vector2(25.5, -191.25)
+scale = Vector2(0.9107143, 0.9107143)
+texture = ExtResource("18_jump")
+hframes = 4
+vframes = 2

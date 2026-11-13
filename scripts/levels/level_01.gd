@@ -49,6 +49,9 @@ extends Node2D
 # level bounds, so the camera never reveals sky outside the playable strip.
 
 const ACTION_RESTART := &"restart"
+const WIND_AMBIENCE: AudioStream = preload("res://assets/audio/sfx/stratos_v1/loops/floating_island_wind_loop.wav")
+const SOUND_RESPAWN: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/player_respawn.wav")
+const SOUND_COMPLETE: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/level_complete.wav")
 
 const LIMIT_LEFT: float = 0.0
 const LIMIT_TOP: float = -300.0
@@ -80,6 +83,9 @@ var _tutorial_completed: bool = false
 var _controller_prompts: bool = false
 var _coin_count: int = 0
 var _special_coin_count: int = 0
+var _wind_audio: AudioStreamPlayer = null
+var _level_audio: AudioStreamPlayer = null
+var _wind_fade: Tween = null
 
 
 func _ready() -> void:
@@ -93,6 +99,7 @@ func _ready() -> void:
 	_exit_area.body_entered.connect(_on_exit)
 	_player.grapple_attached.connect(_on_first_grapple_attached)
 	_restart_button.pressed.connect(_restart)
+	_setup_level_audio()
 	_victory.visible = false
 	_update_collectible_hud()
 	_update_control_prompts()
@@ -180,6 +187,9 @@ func _respawn() -> void:
 	# coyote / jump-buffer windows are refilled by the grounded ticks after the respawn.
 	_player.clear_grapple_state()
 	_player.global_position = respawn_position
+	if _level_audio != null:
+		_level_audio.stream = SOUND_RESPAWN
+		_level_audio.play()
 
 
 func _on_death(body: Node2D) -> void:
@@ -192,6 +202,15 @@ func _on_exit(body: Node2D) -> void:
 	if _state != State.PLAYING or body != _player:
 		return
 	_state = State.WON
+	if _level_audio != null:
+		_level_audio.stream = SOUND_COMPLETE
+		_level_audio.play()
+	if _wind_audio != null:
+		if _wind_fade != null and _wind_fade.is_running():
+			_wind_fade.kill()
+		_wind_fade = create_tween()
+		_wind_fade.tween_property(_wind_audio, "volume_db", -40.0, 0.2)
+		_wind_fade.tween_callback(_wind_audio.stop)
 	_player.velocity = Vector2.ZERO
 	_player.clear_grapple_state()
 	_player.set_physics_process(false)
@@ -208,3 +227,23 @@ func _complete_tutorial_sign() -> void:
 		return
 	_tutorial_completed = true
 	_tutorial_ui.fade_out()
+
+
+func _setup_level_audio() -> void:
+	_level_audio = AudioStreamPlayer.new()
+	_level_audio.name = "LevelOneShotAudio"
+	_level_audio.bus = "SFX"
+	_level_audio.volume_db = -2.0
+	add_child(_level_audio)
+	_wind_audio = AudioStreamPlayer.new()
+	_wind_audio.name = "FloatingIslandWind"
+	_wind_audio.bus = "Ambience"
+	var wind_stream: AudioStreamWAV = WIND_AMBIENCE.duplicate() as AudioStreamWAV
+	wind_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	wind_stream.loop_end = int(wind_stream.get_length() * wind_stream.mix_rate)
+	_wind_audio.stream = wind_stream
+	_wind_audio.volume_db = -12.0
+	add_child(_wind_audio)
+	_wind_audio.play()
+	_wind_fade = create_tween()
+	_wind_fade.tween_property(_wind_audio, "volume_db", 0.0, 0.3)

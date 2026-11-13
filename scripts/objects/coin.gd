@@ -9,6 +9,7 @@ class_name CoinPickup
 const TRACKER_GROUP: StringName = &"collectible_tracker"
 const PICKUP_DURATION: float = 0.38
 const NORMAL_COIN_FRAME_COUNT: int = 8
+const PICKUP_SOUND: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/coin_pickup.wav")
 
 @onready var _collision: CollisionShape2D = get_node_or_null("CollisionShape2D") as CollisionShape2D
 @onready var _artwork: Sprite2D = get_node_or_null("Artwork") as Sprite2D
@@ -17,6 +18,7 @@ var _home_position: Vector2 = Vector2.ZERO
 var _elapsed: float = 0.0
 var _pickup_elapsed: float = 0.0
 var _collected: bool = false
+var _pickup_audio: AudioStreamPlayer2D = null
 
 
 func _ready() -> void:
@@ -26,6 +28,12 @@ func _ready() -> void:
 		return
 
 	_home_position = position
+	_pickup_audio = AudioStreamPlayer2D.new()
+	_pickup_audio.name = "PickupAudio"
+	_pickup_audio.bus = "SFX"
+	_pickup_audio.max_distance = 180.0
+	_pickup_audio.volume_db = -6.0
+	add_child(_pickup_audio)
 	body_entered.connect(_on_body_entered)
 
 
@@ -114,6 +122,7 @@ func _on_body_entered(body: Node2D) -> void:
 	_collision.set_deferred("disabled", true)
 
 	_award_collection()
+	_play_pickup_sound()
 	queue_redraw()
 
 
@@ -126,5 +135,12 @@ func _award_collection() -> void:
 		push_warning("CoinPickup: No collectible tracker found.")
 
 
+func _play_pickup_sound() -> void:
+	if _pickup_audio == null:
+		return
+	_pickup_audio.stream = PICKUP_SOUND
+	_pickup_audio.play()
+
+
 func _pickup_duration() -> float:
-	return PICKUP_DURATION
+	return maxf(PICKUP_DURATION, PICKUP_SOUND.get_length() + 0.05)

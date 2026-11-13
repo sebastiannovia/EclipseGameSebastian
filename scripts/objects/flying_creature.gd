@@ -28,6 +28,9 @@ class_name FlyingCreature
 
 const GRAPPLE_GROUP := &"grappleable"
 const CREATURE_LAYER := 4 ## the layer the player's line-of-sight ray looks for
+const FLAP_SOUND: AudioStream = preload("res://assets/audio/sfx/stratos_v1/loops/sky_skimmer_flap_loop.wav")
+const CHIRP_SOUND: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/sky_skimmer_chirp.wav")
+const AUDIBLE_DISTANCE := 220.0
 
 ## Where the golden harness sits inside one 96x64 frame, measured from the centre
 ## of that frame, with +x pointing the way the creature faces.
@@ -84,6 +87,11 @@ var _pose: StringName = &"fly"
 var _gliding: bool = false
 var _turn_timer: float = 0.0
 var _release_timer: float = 0.0
+var _flap_audio: AudioStreamPlayer2D = null
+var _chirp_audio: AudioStreamPlayer2D = null
+var _chirp_timer: float = 9.0
+var _flap_fade: Tween = null
+var _flap_audible: bool = false
 
 
 func _ready() -> void:
@@ -100,6 +108,7 @@ func _ready() -> void:
 		_sprite.speed_scale = _fly_speed_scale()
 		if _frames != null and _frames.has_animation(_pose):
 			_sprite.play(_pose)
+	_setup_audio()
 	if _anchor_fx != null:
 		_anchor_frames = _anchor_fx.sprite_frames
 		# The effect marks the point the hook ties to, so it sits on the marker
@@ -137,6 +146,7 @@ func _physics_process(delta: float) -> void:
 	_release_timer = maxf(0.0, _release_timer - delta)
 	_update_pose(delta)
 	_update_anchor_fx()
+	_update_audio(delta)
 
 
 ## World-space grapple point of this creature: the child Marker2D if there is one.
@@ -239,3 +249,57 @@ func _update_anchor_fx() -> void:
 func _grapple_point_local() -> Vector2:
 	var marker: Marker2D = get_node_or_null("GrapplePoint") as Marker2D
 	return marker.position if marker != null else Vector2.ZERO
+
+
+func _setup_audio() -> void:
+	_flap_audio = AudioStreamPlayer2D.new()
+	_flap_audio.name = "FlapAmbience"
+	_flap_audio.bus = "Ambience"
+	_flap_audio.max_distance = AUDIBLE_DISTANCE
+	var flap_stream: AudioStreamWAV = FLAP_SOUND.duplicate() as AudioStreamWAV
+	flap_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	flap_stream.loop_end = int(flap_stream.get_length() * flap_stream.mix_rate)
+	_flap_audio.stream = flap_stream
+	_flap_audio.volume_db = -12.0
+	add_child(_flap_audio)
+	_chirp_audio = AudioStreamPlayer2D.new()
+	_chirp_audio.name = "ChirpAudio"
+	_chirp_audio.bus = "SFX"
+	_chirp_audio.max_distance = AUDIBLE_DISTANCE
+	_chirp_audio.volume_db = -4.0
+	_chirp_audio.stream = CHIRP_SOUND
+	add_child(_chirp_audio)
+	_chirp_timer = randf_range(6.0, 14.0)
+
+
+func _update_audio(delta: float) -> void:
+	if _flap_audio == null or _chirp_audio == null:
+		return
+	var player: Node2D = get_tree().get_first_node_in_group("player") as Node2D
+	var nearby: bool = player != null and global_position.distance_to(player.global_position) <= AUDIBLE_DISTANCE
+	if nearby != _flap_audible:
+		_flap_audible = nearby
+		if _flap_fade != null and _flap_fade.is_running():
+			_flap_fade.kill()
+		if nearby:
+			if not _flap_audio.playing:
+				_flap_audio.volume_db = -12.0
+				_flap_audio.play()
+			_flap_fade = create_tween()
+			_flap_fade.tween_property(_flap_audio, "volume_db", 0.0, 0.2)
+		else:
+			_flap_fade = create_tween()
+			_flap_fade.tween_property(_flap_audio, "volume_db", -40.0, 0.2)
+			_flap_fade.tween_callback(_flap_audio.stop)
+	if nearby:
+		_chirp_timer -= delta
+		if _chirp_timer <= 0.0:
+			_chirp_audio.play()
+			_chirp_timer = randf_range(8.0, 16.0)
+	else:
+		_chirp_timer = minf(_chirp_timer, 4.0)
+
+
+func _exit_tree() -> void:
+	if _flap_audio != null:
+		_flap_audio.stop()

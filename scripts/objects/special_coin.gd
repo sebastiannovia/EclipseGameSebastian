@@ -1,5 +1,7 @@
 extends "res://scripts/objects/coin.gd"
 
+const SPECIAL_PICKUP_SOUND: AudioStream = preload("res://assets/audio/sfx/stratos_v1/sfx/special_coin_pickup.wav")
+
 func _draw_idle_art() -> void:
 	# A small turquoise gem with a restrained gold setting and crisp facets.
 	draw_colored_polygon(PackedVector2Array([
@@ -33,6 +35,13 @@ func _draw_pickup_effect() -> void:
 		]), color)
 
 
+func _play_pickup_sound() -> void:
+	if _pickup_audio == null:
+		return
+	_pickup_audio.stream = SPECIAL_PICKUP_SOUND
+	_pickup_audio.play()
+
+
 func _award_collection() -> void:
 	var tracker: Node = get_tree().get_first_node_in_group(TRACKER_GROUP)
 	if tracker != null and tracker.has_method("add_special_collectibles"):
@@ -40,4 +49,4 @@ func _award_collection() -> void:
 
 
 func _pickup_duration() -> float:
-	return 0.58
+	return maxf(0.58, SPECIAL_PICKUP_SOUND.get_length() + 0.05)
