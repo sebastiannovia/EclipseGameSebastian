@@ -1,62 +1,62 @@
 extends Node2D
 class_name PlayerVisuals
 
-# Temporary placeholder look for the runner: a white body with orange accents,
-# drawn by the Polygon2D children declared in res://scenes/player/Player.tscn.
-#
-# This node deliberately knows nothing about physics. It only *reads* the body:
-# velocity for the facing direction and `is_grappling` for the hooked tint. The
-# rope itself is drawn by PlayerRope, which hangs off the body instead of off
-# this node so the mirroring here cannot flip it. The 12 x 20 collision box
-# stays exactly as it is, so swapping these polygons for real pixel-art sprites
-# later means deleting this node and nothing else.
+# The cutout rig is visual-only. CharacterBody2D and rope mechanics are untouched.
 
-const SPEED_TO_TURN: float = 12.0 ## px/s: below this the facing is held, so the character does not twitch while decelerating.
-
-const REST_TINT := Color(1.0, 1.0, 1.0)
-const HOOK_TINT := Color(1.0, 0.78, 0.44)
-const VISOR_TINT := Color(1.0, 1.0, 1.0)
-
-const TINT_RATE: float = 9.0 ## how fast the hooked tint fades in and out
+const SCALE: float = 0.125
+const SPEED_TO_TURN: float = 12.0
+const IDLE_CYCLE_SECONDS: float = 2.4
+const BREATH_LIFT_SOURCE_PX: float = 8.0
 
 @onready var _body: Player = get_parent() as Player
-@onready var _body_poly: Polygon2D = get_node("Body") as Polygon2D
-@onready var _visor_poly: Polygon2D = get_node("Visor") as Polygon2D
-@onready var _core_poly: Polygon2D = get_node("Core") as Polygon2D
+@onready var _torso: Node2D = get_node("RigCanvas/Pelvis/Torso") as Node2D
+@onready var _helmet: Node2D = get_node("RigCanvas/Pelvis/Torso/HelmetHead") as Node2D
+@onready var _rear_arm: Node2D = get_node("RigCanvas/Pelvis/Torso/RearUpperArm") as Node2D
+@onready var _front_arm: Node2D = get_node("RigCanvas/Pelvis/Torso/FrontUpperArm") as Node2D
 
-## +1 / -1. Mirrored onto this node's scale, so every child polygon turns with
-## the character instead of being redrawn.
 var _facing: float = 1.0
-
-## 0 = resting, 1 = rope attached. Eased, so hooking on reads as a glow.
-var _hook_tint: float = 0.0
+var _idle_elapsed: float = 0.0
 
 
 func _ready() -> void:
-	scale = Vector2(_facing, 1.0)
+	_set_facing(1.0)
+	_snap_visual_origin()
 
 
 func _physics_process(_delta: float) -> void:
-	# While swinging the body's velocity is the arc velocity, so this also turns
-	# the character to face the direction it is actually travelling in.
-	var wanted: float = _facing
 	if absf(_body.velocity.x) > SPEED_TO_TURN:
-		wanted = signf(_body.velocity.x)
-	if wanted != _facing:
-		_facing = wanted
+		_set_facing(-1.0 if _body.velocity.x < 0.0 else 1.0)
 
 
 func _process(delta: float) -> void:
-	_hook_tint = move_tint(delta)
-
-	var body_tint: Color = REST_TINT.lerp(HOOK_TINT, _hook_tint)
-	_body_poly.modulate = body_tint
-	_core_poly.modulate = body_tint
-	_visor_poly.modulate = VISOR_TINT.lerp(HOOK_TINT, _hook_tint)
-
-	scale = Vector2(_facing, 1.0)
+	_snap_visual_origin()
+	if _body.is_on_floor() and absf(_body.velocity.x) <= SPEED_TO_TURN and not _body.is_grappling:
+		_idle_elapsed = fposmod(_idle_elapsed + delta, IDLE_CYCLE_SECONDS)
+		_apply_idle_pose()
+	else:
+		_set_neutral_pose()
 
 
-func move_tint(delta: float) -> float:
-	var target: float = 1.0 if _body.is_grappling else 0.0
-	return move_toward(_hook_tint, target, TINT_RATE * delta)
+func _apply_idle_pose() -> void:
+	var phase := _idle_elapsed / IDLE_CYCLE_SECONDS
+	var breath := 0.5 - 0.5 * cos(TAU * phase)
+	_torso.position.y = -BREATH_LIFT_SOURCE_PX * breath
+	_helmet.rotation = 0.012 * sin(TAU * phase + 0.25)
+	_rear_arm.rotation = 0.018 * sin(TAU * phase)
+	_front_arm.rotation = -0.015 * sin(TAU * phase + 0.2)
+
+
+func _set_neutral_pose() -> void:
+	_torso.position.y = 0.0
+	_helmet.rotation = 0.0
+	_rear_arm.rotation = 0.0
+	_front_arm.rotation = 0.0
+
+
+func _set_facing(direction: float) -> void:
+	_facing = direction
+	scale = Vector2(SCALE * _facing, SCALE)
+
+
+func _snap_visual_origin() -> void:
+	global_position = _body.global_position.round()

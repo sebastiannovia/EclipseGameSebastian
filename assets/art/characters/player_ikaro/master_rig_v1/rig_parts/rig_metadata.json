@@ -1,0 +1,241 @@
+{
+  "source_master": "master/IKARO_astronaut_master_right.png",
+  "canvas_size": [
+    213,
+    415
+  ],
+  "origin": "top-left of master canvas; 8px transparent border added around extracted art",
+  "parts": [
+    {
+      "name": "backpack",
+      "label": "Backpack",
+      "file": "rig_parts/backpack.png",
+      "draw_order": 0,
+      "pivot_master_xy": [
+        71,
+        171
+      ],
+      "crop_bbox_master_xyxy": [
+        8,
+        98,
+        100,
+        268
+      ],
+      "sprite2d_position_relative_to_bone": [
+        -63,
+        -73
+      ],
+      "notes": "Rigid cutout from one master pose; includes overlap at the joint for rotation."
+    },
+    {
+      "name": "rear_thigh",
+      "label": "Rear thigh",
+      "file": "rig_parts/rear_thigh.png",
+      "draw_order": 1,
+      "pivot_master_xy": [
+        111,
+        258
+      ],
+      "crop_bbox_master_xyxy": [
+        75,
+        232,
+        157,
+        330
+      ],
+      "sprite2d_position_relative_to_bone": [
+        -36,
+        -26
+      ],
+      "notes": "Rigid cutout from one master pose; includes overlap at the joint for rotation."
+    },
+    {
+      "name": "rear_shin_boot",
+      "label": "Rear shin + boot",
+      "file": "rig_parts/rear_shin_boot.png",
+      "draw_order": 2,
+      "pivot_master_xy": [
+        110,
+        318
+      ],
+      "crop_bbox_master_xyxy": [
+        55,
+        293,
+        158,
+        407
+      ],
+      "sprite2d_position_relative_to_bone": [
+        -55,
+        -25
+      ],
+      "notes": "Rigid cutout from one master pose; includes overlap at the joint for rotation."
+    },
+    {
+      "name": "front_thigh",
+      "label": "Front thigh",
+      "file": "rig_parts/front_thigh.png",
+      "draw_order": 3,
+      "pivot_master_xy": [
+        159,
+        256
+      ],
+      "crop_bbox_master_xyxy": [
+        120,
+        232,
+        197,
+        330
+      ],
+      "sprite2d_position_relative_to_bone": [
+        -39,
+        -24
+      ],
+      "notes": "Rigid cutout from one master pose; includes overlap at the joint for rotation."
+    },
+    {
+      "name": "front_shin_boot",
+      "label": "Front shin + boot",
+      "file": "rig_parts/front_shin_boot.png",
+      "draw_order": 4,
+      "pivot_master_xy": [
+        162,
+        318
+      ],
+      "crop_bbox_master_xyxy": [
+        114,
+        294,
+        202,
+        404
+      ],
+      "sprite2d_position_relative_to_bone": [
+        -48,
+        -24
+      ],
+      "notes": "Rigid cutout from one master pose; includes overlap at the joint for rotation."
+    },
+    {
+      "name": "torso_pelvis",
+      "label": "Torso + pelvis",
+      "file": "rig_parts/torso_pelvis.png",
+      "draw_order": 5,
+      "pivot_master_xy": [
+        132,
+        239
+      ],
+      "crop_bbox_master_xyxy": [
+        39,
+        49,
+        205,
+        407
+      ],
+      "sprite2d_position_relative_to_bone": [
+        -93,
+        -190
+      ],
+      "notes": "Rigid cutout from one master pose; includes overlap at the joint for rotation."
+    },
+    {
+      "name": "rear_upper_arm",
+      "label": "Rear upper arm",
+      "file": "rig_parts/rear_upper_arm.png",
+      "draw_order": 6,
+      "pivot_master_xy": [
+        92,
+        166
+      ],
+      "crop_bbox_master_xyxy": [
+        57,
+        138,
+        129,
+        220
+      ],
+      "sprite2d_position_relative_to_bone": [
+        -35,
+        -28
+      ],
+      "notes": "Rigid cutout from one master pose; includes overlap at the joint for rotation."
+    },
+    {
+      "name": "rear_forearm_glove",
+      "label": "Rear forearm + glove",
+      "file": "rig_parts/rear_forearm_glove.png",
+      "draw_order": 7,
+      "pivot_master_xy": [
+        91,
+        218
+      ],
+      "crop_bbox_master_xyxy": [
+        51,
+        192,
+        120,
+        292
+      ],
+      "sprite2d_position_relative_to_bone": [
+        -40,
+        -26
+      ],
+      "notes": "Rigid cutout from one master pose; includes overlap at the joint for rotation."
+    },
+    {
+      "name": "front_upper_arm",
+      "label": "Front upper arm",
+      "file": "rig_parts/front_upper_arm.png",
+      "draw_order": 8,
+      "pivot_master_xy": [
+        172,
+        165
+      ],
+      "crop_bbox_master_xyxy": [
+        152,
+        140,
+        190,
+        223
+      ],
+      "sprite2d_position_relative_to_bone": [
+        -20,
+        -25
+      ],
+      "notes": "Rigid cutout from one master pose; includes overlap at the joint for rotation."
+    },
+    {
+      "name": "front_forearm_glove",
+      "label": "Front forearm + glove",
+      "file": "rig_parts/front_forearm_glove.png",
+      "draw_order": 9,
+      "pivot_master_xy": [
+        185,
+        218
+      ],
+      "crop_bbox_master_xyxy": [
+        162,
+        192,
+        203,
+        287
+      ],
+      "sprite2d_position_relative_to_bone": [
+        -23,
+        -26
+      ],
+      "notes": "Rigid cutout from one master pose; includes overlap at the joint for rotation."
+    },
+    {
+      "name": "helmet_head",
+      "label": "Helmet + neck",
+      "file": "rig_parts/helmet_head.png",
+      "draw_order": 10,
+      "pivot_master_xy": [
+        131,
+        129
+      ],
+      "crop_bbox_master_xyxy": [
+        57,
+        8,
+        205,
+        154
+      ],
+      "sprite2d_position_relative_to_bone": [
+        -74,
+        -121
+      ],
+      "notes": "Rigid cutout from one master pose; includes overlap at the joint for rotation."
+    }
+  ]
+}

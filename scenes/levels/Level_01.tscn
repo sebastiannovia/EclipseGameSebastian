@@ -7,65 +7,41 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/FlyingCreature.tscn" id="6_creature"]
 [ext_resource type="Script" uid="uid://dl6h1rmsvidwq" path="res://scripts/levels/grapple_tutorial.gd" id="7_tutorial"]
 [ext_resource type="PackedScene" path="res://scenes/objects/Coin.tscn" id="8_dwcxj"]
+[ext_resource type="Shader" uid="uid://d0bjs70h1v0ym" path="res://scenes/levels/blurr.gdshader" id="8_tj285"]
 [ext_resource type="PackedScene" path="res://scenes/objects/SpecialCoin.tscn" id="9_c83vx"]
 [ext_resource type="FontFile" uid="uid://bcq18x63du72p" path="res://assets/fonts/TutorialSign-NotoSerif-Medium.ttf" id="10_tutorial_font"]
-[ext_resource type="Texture2D" path="res://assets/art/background/parallax_mirror_v1/layers/L1_sky_sunset_640x360.png" id="11_background_sky"]
-[ext_resource type="Texture2D" path="res://assets/art/background/parallax_mirror_v1/layers/L2_mirror_tile_1280x360.png" id="12_background_clouds"]
-[ext_resource type="Texture2D" path="res://assets/art/background/parallax_mirror_v1/layers/L3_mirror_tile_1280x360.png" id="13_background_far_islands"]
-[ext_resource type="Texture2D" path="res://assets/art/portals/animated_v2/entry/portal_entry_4f_256x192.png" id="14_portal_entry_strip"]
-[ext_resource type="Texture2D" path="res://assets/art/portals/animated_v2/exit/portal_exit_4f_256x192.png" id="15_portal_exit_strip"]
+[ext_resource type="Texture2D" uid="uid://bxenf6tmm71lq" path="res://assets/art/background/parallax_mirror_v1/layers/L1_sky_sunset_640x360.png" id="11_background_sky"]
+[ext_resource type="Texture2D" uid="uid://bmshn2d4iah6v" path="res://assets/art/background/parallax_mirror_v1/layers/L2_mirror_tile_1280x360.png" id="12_background_clouds"]
+[ext_resource type="Texture2D" uid="uid://c5dgjlutk6gyu" path="res://assets/art/background/parallax_mirror_v1/layers/L3_mirror_tile_1280x360.png" id="13_background_far_islands"]
+[ext_resource type="Texture2D" uid="uid://ck7wuso8r1h0j" path="res://assets/art/portals/fluid_vortex_v5/entry/entry_vortex_8f_256x192.png" id="14_portal_entry_strip"]
+[ext_resource type="Texture2D" uid="uid://w5j04nog7by3" path="res://assets/art/portals/fluid_vortex_v5/exit/exit_vortex_8f_256x192.png" id="15_portal_exit_strip"]
 [ext_resource type="Texture2D" uid="uid://b62gts3ti8pvl" path="res://assets/art/final_pack/STRATOS_Art_Assets/ui/tutorial_sign_frame.png" id="16_tutorial_frame"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/collectibles_hud_v1/game_scale/hud_collectibles_frame_256w.png" id="17_hud_collectibles"]
-[ext_resource type="Texture2D" path="res://assets/art/background/parallax_mirror_v1/layers/L4_mirror_tile_1280x360.png" id="18_background_mid_islands"]
-[ext_resource type="Texture2D" path="res://assets/art/background/parallax_mirror_v1/layers/L5_mirror_tile_1280x360.png" id="19_background_mist"]
+[ext_resource type="Texture2D" uid="uid://cnysp5ddvaf1w" path="res://assets/art/ui/collectibles_hud_v1/game_scale/hud_collectibles_frame_256w.png" id="17_hud_collectibles"]
+[ext_resource type="Texture2D" uid="uid://bnt3day8xyqk" path="res://assets/art/background/parallax_mirror_v1/layers/L4_mirror_tile_1280x360.png" id="18_background_mid_islands"]
+[ext_resource type="Texture2D" uid="uid://dffoc36kwmtke" path="res://assets/art/background/parallax_mirror_v1/layers/L5_mirror_tile_1280x360.png" id="19_background_mist"]
+[ext_resource type="Script" uid="uid://cdjpq0rmtcmsp" path="res://scripts/levels/background_blur.gd" id="20_background_blur"]
 [ext_resource type="PackedScene" path="res://scenes/environment/Waterfall.tscn" id="25_waterfall"]
-[sub_resource type="AtlasTexture" id="EntryPortalFrame0"]
-atlas = ExtResource("14_portal_entry_strip")
-region = Rect2(0, 0, 256, 192)
+[ext_resource type="Texture2D" uid="uid://c66fkgmrccs7b" path="res://assets/art/portals/fluid_vortex_v5/entry/frame_static/entry_frame_static_no_core.png" id="26_portal_entry_frame"]
+[ext_resource type="Texture2D" uid="uid://c1hx1rhbtcqv8" path="res://assets/art/portals/fluid_vortex_v5/exit/frame_static/exit_frame_static_no_core_mirrored.png" id="27_portal_exit_frame"]
 
-[sub_resource type="AtlasTexture" id="EntryPortalFrame1"]
-atlas = ExtResource("14_portal_entry_strip")
-region = Rect2(256, 0, 256, 192)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nafxw"]
+shader = ExtResource("8_tj285")
+shader_parameter/blur_radius = 7.0
 
-[sub_resource type="AtlasTexture" id="EntryPortalFrame2"]
-atlas = ExtResource("14_portal_entry_strip")
-region = Rect2(512, 0, 256, 192)
+[sub_resource type="RectangleShape2D" id="RectArch"]
+size = Vector2(180, 44)
 
-[sub_resource type="AtlasTexture" id="EntryPortalFrame3"]
-atlas = ExtResource("14_portal_entry_strip")
-region = Rect2(768, 0, 256, 192)
+[sub_resource type="RectangleShape2D" id="RectRockA"]
+size = Vector2(200, 46)
 
-[sub_resource type="SpriteFrames" id="EntryPortalFrames"]
-animations = [{
-"frames": [{ "duration": 1.0, "texture": SubResource("EntryPortalFrame0") }, { "duration": 1.0, "texture": SubResource("EntryPortalFrame1") }, { "duration": 1.0, "texture": SubResource("EntryPortalFrame2") }, { "duration": 1.0, "texture": SubResource("EntryPortalFrame3") }],
-"loop": true,
-"name": &"idle",
-"speed": 8.0
-}]
+[sub_resource type="RectangleShape2D" id="RectRockB"]
+size = Vector2(260, 40)
 
-[sub_resource type="AtlasTexture" id="ExitPortalFrame0"]
-atlas = ExtResource("15_portal_exit_strip")
-region = Rect2(0, 0, 256, 192)
+[sub_resource type="RectangleShape2D" id="RectRockC"]
+size = Vector2(40, 120)
 
-[sub_resource type="AtlasTexture" id="ExitPortalFrame1"]
-atlas = ExtResource("15_portal_exit_strip")
-region = Rect2(256, 0, 256, 192)
-
-[sub_resource type="AtlasTexture" id="ExitPortalFrame2"]
-atlas = ExtResource("15_portal_exit_strip")
-region = Rect2(512, 0, 256, 192)
-
-[sub_resource type="AtlasTexture" id="ExitPortalFrame3"]
-atlas = ExtResource("15_portal_exit_strip")
-region = Rect2(768, 0, 256, 192)
-
-[sub_resource type="SpriteFrames" id="ExitPortalFrames"]
-animations = [{
-"frames": [{ "duration": 1.0, "texture": SubResource("ExitPortalFrame0") }, { "duration": 1.0, "texture": SubResource("ExitPortalFrame1") }, { "duration": 1.0, "texture": SubResource("ExitPortalFrame2") }, { "duration": 1.0, "texture": SubResource("ExitPortalFrame3") }],
-"loop": true,
-"name": &"idle",
-"speed": 8.0
-}]
+[sub_resource type="RectangleShape2D" id="RectDeathPlane"]
+size = Vector2(5800, 24)
 
 [sub_resource type="RectangleShape2D" id="RectStart"]
 size = Vector2(340, 40)
@@ -112,26 +88,136 @@ size = Vector2(100, 40)
 [sub_resource type="RectangleShape2D" id="RectExitIsland"]
 size = Vector2(160, 40)
 
-[sub_resource type="RectangleShape2D" id="RectRockStart"]
-size = Vector2(120, 50)
+[sub_resource type="AtlasTexture" id="EntryPortalFrame0"]
+atlas = ExtResource("14_portal_entry_strip")
+region = Rect2(0, 0, 256, 192)
 
-[sub_resource type="RectangleShape2D" id="RectArch"]
-size = Vector2(180, 44)
+[sub_resource type="AtlasTexture" id="EntryPortalFrame1"]
+atlas = ExtResource("14_portal_entry_strip")
+region = Rect2(256, 0, 256, 192)
 
-[sub_resource type="RectangleShape2D" id="RectRockA"]
-size = Vector2(200, 46)
+[sub_resource type="AtlasTexture" id="EntryPortalFrame2"]
+atlas = ExtResource("14_portal_entry_strip")
+region = Rect2(512, 0, 256, 192)
 
-[sub_resource type="RectangleShape2D" id="RectRockB"]
-size = Vector2(260, 40)
+[sub_resource type="AtlasTexture" id="EntryPortalFrame3"]
+atlas = ExtResource("14_portal_entry_strip")
+region = Rect2(768, 0, 256, 192)
 
-[sub_resource type="RectangleShape2D" id="RectRockC"]
-size = Vector2(40, 120)
+[sub_resource type="AtlasTexture" id="EntryPortalFrame4"]
+atlas = ExtResource("14_portal_entry_strip")
+region = Rect2(1024, 0, 256, 192)
+
+[sub_resource type="AtlasTexture" id="EntryPortalFrame5"]
+atlas = ExtResource("14_portal_entry_strip")
+region = Rect2(1280, 0, 256, 192)
+
+[sub_resource type="AtlasTexture" id="EntryPortalFrame6"]
+atlas = ExtResource("14_portal_entry_strip")
+region = Rect2(1536, 0, 256, 192)
+
+[sub_resource type="AtlasTexture" id="EntryPortalFrame7"]
+atlas = ExtResource("14_portal_entry_strip")
+region = Rect2(1792, 0, 256, 192)
+
+[sub_resource type="SpriteFrames" id="EntryPortalFrames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("EntryPortalFrame0")
+}, {
+"duration": 1.0,
+"texture": SubResource("EntryPortalFrame1")
+}, {
+"duration": 1.0,
+"texture": SubResource("EntryPortalFrame2")
+}, {
+"duration": 1.0,
+"texture": SubResource("EntryPortalFrame3")
+}, {
+"duration": 1.0,
+"texture": SubResource("EntryPortalFrame4")
+}, {
+"duration": 1.0,
+"texture": SubResource("EntryPortalFrame5")
+}, {
+"duration": 1.0,
+"texture": SubResource("EntryPortalFrame6")
+}, {
+"duration": 1.0,
+"texture": SubResource("EntryPortalFrame7")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 8.0
+}]
+
+[sub_resource type="AtlasTexture" id="ExitPortalFrame0"]
+atlas = ExtResource("15_portal_exit_strip")
+region = Rect2(0, 0, 256, 192)
+
+[sub_resource type="AtlasTexture" id="ExitPortalFrame1"]
+atlas = ExtResource("15_portal_exit_strip")
+region = Rect2(256, 0, 256, 192)
+
+[sub_resource type="AtlasTexture" id="ExitPortalFrame2"]
+atlas = ExtResource("15_portal_exit_strip")
+region = Rect2(512, 0, 256, 192)
+
+[sub_resource type="AtlasTexture" id="ExitPortalFrame3"]
+atlas = ExtResource("15_portal_exit_strip")
+region = Rect2(768, 0, 256, 192)
+
+[sub_resource type="AtlasTexture" id="ExitPortalFrame4"]
+atlas = ExtResource("15_portal_exit_strip")
+region = Rect2(1024, 0, 256, 192)
+
+[sub_resource type="AtlasTexture" id="ExitPortalFrame5"]
+atlas = ExtResource("15_portal_exit_strip")
+region = Rect2(1280, 0, 256, 192)
+
+[sub_resource type="AtlasTexture" id="ExitPortalFrame6"]
+atlas = ExtResource("15_portal_exit_strip")
+region = Rect2(1536, 0, 256, 192)
+
+[sub_resource type="AtlasTexture" id="ExitPortalFrame7"]
+atlas = ExtResource("15_portal_exit_strip")
+region = Rect2(1792, 0, 256, 192)
+
+[sub_resource type="SpriteFrames" id="ExitPortalFrames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("ExitPortalFrame0")
+}, {
+"duration": 1.0,
+"texture": SubResource("ExitPortalFrame1")
+}, {
+"duration": 1.0,
+"texture": SubResource("ExitPortalFrame2")
+}, {
+"duration": 1.0,
+"texture": SubResource("ExitPortalFrame3")
+}, {
+"duration": 1.0,
+"texture": SubResource("ExitPortalFrame4")
+}, {
+"duration": 1.0,
+"texture": SubResource("ExitPortalFrame5")
+}, {
+"duration": 1.0,
+"texture": SubResource("ExitPortalFrame6")
+}, {
+"duration": 1.0,
+"texture": SubResource("ExitPortalFrame7")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 8.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectExitTrigger"]
 size = Vector2(96, 96)
-
-[sub_resource type="RectangleShape2D" id="RectDeathPlane"]
-size = Vector2(5800, 24)
 
 [node name="Level_01" type="Node2D" unique_id=485609847]
 script = ExtResource("1_level")
@@ -139,297 +225,98 @@ script = ExtResource("1_level")
 [node name="Background" type="Node2D" parent="." unique_id=1780891953]
 z_index = -20
 
-[node name="L1_sky_sunset" type="Parallax2D" parent="Background"]
+[node name="L1_sky_sunset" type="Parallax2D" parent="Background" unique_id=1121725780]
 scroll_scale = Vector2(0, 0)
-repeat_size = Vector2(0, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="Background/L1_sky_sunset"]
-position = Vector2(0, 0)
-centered = false
-texture_filter = 1
-texture_repeat = 0
+[node name="Sprite2D" type="Sprite2D" parent="Background/L1_sky_sunset" unique_id=1681289162]
+texture_filter = 2
+material = SubResource("ShaderMaterial_nafxw")
 texture = ExtResource("11_background_sky")
+centered = false
 
-[node name="L2_distant_clouds" type="Parallax2D" parent="Background"]
+[node name="L2_distant_clouds" type="Parallax2D" parent="Background" unique_id=1044700082]
 z_index = 1
 scroll_scale = Vector2(0.06, 0)
 repeat_size = Vector2(1280, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="Background/L2_distant_clouds"]
-position = Vector2(0, 0)
-centered = false
-texture_filter = 1
-texture_repeat = 0
+[node name="Sprite2D" type="Sprite2D" parent="Background/L2_distant_clouds" unique_id=762839869]
+texture_filter = 2
+material = SubResource("ShaderMaterial_nafxw")
 texture = ExtResource("12_background_clouds")
+centered = false
 
-[node name="L3_distant_islands" type="Parallax2D" parent="Background"]
+[node name="L3_distant_islands" type="Parallax2D" parent="Background" unique_id=295294429]
 z_index = 2
 scroll_scale = Vector2(0.12, 0)
 repeat_size = Vector2(1280, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="Background/L3_distant_islands"]
-position = Vector2(0, 0)
-centered = false
-texture_filter = 1
-texture_repeat = 0
+[node name="Sprite2D" type="Sprite2D" parent="Background/L3_distant_islands" unique_id=1871792069]
+texture_filter = 2
+material = SubResource("ShaderMaterial_nafxw")
 texture = ExtResource("13_background_far_islands")
+centered = false
 
-[node name="L4_midground_islands" type="Parallax2D" parent="Background"]
+[node name="L4_midground_islands" type="Parallax2D" parent="Background" unique_id=1821568738]
 z_index = 3
 scroll_scale = Vector2(0.18, 0)
 repeat_size = Vector2(1280, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="Background/L4_midground_islands"]
-position = Vector2(0, 0)
-centered = false
-texture_filter = 1
-texture_repeat = 0
+[node name="Sprite2D" type="Sprite2D" parent="Background/L4_midground_islands" unique_id=1521005174]
+texture_filter = 2
+material = SubResource("ShaderMaterial_nafxw")
 texture = ExtResource("18_background_mid_islands")
+centered = false
 
-[node name="Waterfall_far_left_small" parent="Background/L4_midground_islands" instance=ExtResource("25_waterfall")]
+[node name="Waterfall_far_left_small" parent="Background/L4_midground_islands" unique_id=1253150006 instance=ExtResource("25_waterfall")]
 position = Vector2(261.633, 98.83)
+scale = Vector2(0.172866, 0.172866)
 visual_scale = 0.172866
-start_frame = 0
 
-[node name="Waterfall_central_upper" parent="Background/L4_midground_islands" instance=ExtResource("25_waterfall")]
+[node name="Waterfall_central_upper" parent="Background/L4_midground_islands" unique_id=407731307 instance=ExtResource("25_waterfall")]
 position = Vector2(433.533, 124.118)
+scale = Vector2(0.166692, 0.166692)
 visual_scale = 0.166692
 start_frame = 2
 
-[node name="Waterfall_central_large" parent="Background/L4_midground_islands" instance=ExtResource("25_waterfall")]
+[node name="Waterfall_central_large" parent="Background/L4_midground_islands" unique_id=56138269 instance=ExtResource("25_waterfall")]
 position = Vector2(400.165, 175.953)
+scale = Vector2(0.31795, 0.31795)
 visual_scale = 0.31795
 start_frame = 5
 
-[node name="Waterfall_right_island" parent="Background/L4_midground_islands" instance=ExtResource("25_waterfall")]
+[node name="Waterfall_right_island" parent="Background/L4_midground_islands" unique_id=398675185 instance=ExtResource("25_waterfall")]
 position = Vector2(560.735, 217.811)
+scale = Vector2(0.283994, 0.283994)
 visual_scale = 0.283994
 start_frame = 3
 
-[node name="Waterfall_lower_right_small" parent="Background/L4_midground_islands" instance=ExtResource("25_waterfall")]
+[node name="Waterfall_lower_right_small" parent="Background/L4_midground_islands" unique_id=39878004 instance=ExtResource("25_waterfall")]
 position = Vector2(557.463, 310.986)
+scale = Vector2(0.148171, 0.148171)
 visual_scale = 0.148171
 start_frame = 6
 
-[node name="L5_foreground_mist" type="Parallax2D" parent="Background"]
+[node name="L5_foreground_mist" type="Parallax2D" parent="Background" unique_id=317074019]
 z_index = 4
 scroll_scale = Vector2(0.24, 0)
 repeat_size = Vector2(1280, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="Background/L5_foreground_mist"]
-position = Vector2(0, 0)
-centered = false
+[node name="Sprite2D" type="Sprite2D" parent="Background/L5_foreground_mist" unique_id=1261554375]
 modulate = Color(1, 1, 1, 0.6)
-texture_filter = 1
-texture_repeat = 0
+texture_filter = 2
+material = SubResource("ShaderMaterial_nafxw")
 texture = ExtResource("19_background_mist")
+centered = false
 
-[node name="Islands" type="Node2D" parent="." unique_id=1501210538]
-
-[node name="StartHaven" type="StaticBody2D" parent="Islands" unique_id=1885336030]
-position = Vector2(210, 20)
-script = ExtResource("2_island")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/StartHaven" unique_id=792913228]
-shape = SubResource("RectStart")
-
-[node name="Meadow" type="StaticBody2D" parent="Islands" unique_id=1458546077]
-position = Vector2(790, 20)
-script = ExtResource("2_island")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/Meadow" unique_id=1637623048]
-shape = SubResource("RectMeadow")
-
-[node name="Terrace" type="StaticBody2D" parent="Islands" unique_id=1935923185]
-position = Vector2(1340, -2)
-script = ExtResource("2_island")
-grass_color = Color(0.58, 0.56, 0.62, 1)
-grass_lit_color = Color(0.74, 0.72, 0.8, 1)
-dirt_color = Color(0.34, 0.28, 0.4, 1)
-dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
-dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
-skirt_depth = 14.0
-grass_thickness = 5.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/Terrace" unique_id=1213596853]
-shape = SubResource("RectTerrace")
-
-[node name="Aerie" type="StaticBody2D" parent="Islands" unique_id=544873176]
-position = Vector2(1730, -20)
-script = ExtResource("2_island")
-grass_color = Color(0.66, 0.7, 0.34, 1)
-grass_lit_color = Color(0.85, 0.87, 0.52, 1)
-dirt_color = Color(0.4, 0.26, 0.36, 1)
-dirt_dark_color = Color(0.29, 0.18, 0.27, 1)
-dirt_lit_color = Color(0.51, 0.35, 0.45, 1)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/Aerie" unique_id=399531046]
-position = Vector2(-166.5, 19)
-shape = SubResource("RectAerie")
-
-[node name="Perch" type="StaticBody2D" parent="Islands" unique_id=2047437917]
-position = Vector2(2140, -5)
-script = ExtResource("2_island")
-grass_color = Color(0.66, 0.7, 0.34, 1)
-grass_lit_color = Color(0.85, 0.87, 0.52, 1)
-dirt_color = Color(0.4, 0.26, 0.36, 1)
-dirt_dark_color = Color(0.29, 0.18, 0.27, 1)
-dirt_lit_color = Color(0.51, 0.35, 0.45, 1)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/Perch" unique_id=1258218521]
-position = Vector2(-193, 6)
-shape = SubResource("RectPerch")
-
-[node name="RestLedge" type="StaticBody2D" parent="Islands" unique_id=623468902]
-position = Vector2(2600, 35)
-script = ExtResource("2_island")
-grass_color = Color(0.66, 0.7, 0.34, 1)
-grass_lit_color = Color(0.85, 0.87, 0.52, 1)
-dirt_color = Color(0.4, 0.26, 0.36, 1)
-dirt_dark_color = Color(0.29, 0.18, 0.27, 1)
-dirt_lit_color = Color(0.51, 0.35, 0.45, 1)
-skirt_depth = 26.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/RestLedge" unique_id=1817775212]
-position = Vector2(-273, -35)
-shape = SubResource("RectRestLedge")
-
-[node name="StepOne" type="StaticBody2D" parent="Islands" unique_id=48782975]
-position = Vector2(2572, 17)
-script = ExtResource("2_island")
-grass_color = Color(0.58, 0.56, 0.62, 1)
-grass_lit_color = Color(0.74, 0.72, 0.8, 1)
-dirt_color = Color(0.34, 0.28, 0.4, 1)
-dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
-dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
-skirt_depth = 12.0
-grass_thickness = 5.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/StepOne" unique_id=1167519754]
-shape = SubResource("RectStepOne")
-
-[node name="StepTwo" type="StaticBody2D" parent="Islands" unique_id=1973340256]
-position = Vector2(2722, -8)
-script = ExtResource("2_island")
-grass_color = Color(0.58, 0.56, 0.62, 1)
-grass_lit_color = Color(0.74, 0.72, 0.8, 1)
-dirt_color = Color(0.34, 0.28, 0.4, 1)
-dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
-dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
-skirt_depth = 12.0
-grass_thickness = 5.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/StepTwo" unique_id=1370235783]
-shape = SubResource("RectStepTwo")
-
-[node name="StepThree" type="StaticBody2D" parent="Islands" unique_id=505333369]
-position = Vector2(2872, -33)
-script = ExtResource("2_island")
-grass_color = Color(0.58, 0.56, 0.62, 1)
-grass_lit_color = Color(0.74, 0.72, 0.8, 1)
-dirt_color = Color(0.34, 0.28, 0.4, 1)
-dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
-dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
-skirt_depth = 12.0
-grass_thickness = 5.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/StepThree" unique_id=857585837]
-shape = SubResource("RectStepThree")
-
-[node name="Nook" type="StaticBody2D" parent="Islands" unique_id=197995791]
-position = Vector2(3390, -15)
-script = ExtResource("2_island")
-grass_color = Color(0.44, 0.64, 0.48, 1)
-grass_lit_color = Color(0.62, 0.82, 0.62, 1)
-dirt_color = Color(0.28, 0.22, 0.38, 1)
-dirt_dark_color = Color(0.2, 0.15, 0.28, 1)
-dirt_lit_color = Color(0.37, 0.3, 0.48, 1)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/Nook" unique_id=1303251704]
-position = Vector2(-39, -15)
-shape = SubResource("RectNook")
-
-[node name="LowRest" type="StaticBody2D" parent="Islands" unique_id=1836231762]
-position = Vector2(3720, 60)
-script = ExtResource("2_island")
-grass_color = Color(0.44, 0.64, 0.48, 1)
-grass_lit_color = Color(0.62, 0.82, 0.62, 1)
-dirt_color = Color(0.28, 0.22, 0.38, 1)
-dirt_dark_color = Color(0.2, 0.15, 0.28, 1)
-dirt_lit_color = Color(0.37, 0.3, 0.48, 1)
-skirt_depth = 40.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/LowRest" unique_id=12936866]
-shape = SubResource("RectLowRest")
-
-[node name="Shelf" type="StaticBody2D" parent="Islands" unique_id=790284446]
-position = Vector2(4080, 40)
-script = ExtResource("2_island")
-grass_color = Color(0.44, 0.64, 0.48, 1)
-grass_lit_color = Color(0.62, 0.82, 0.62, 1)
-dirt_color = Color(0.28, 0.22, 0.38, 1)
-dirt_dark_color = Color(0.2, 0.15, 0.28, 1)
-dirt_lit_color = Color(0.37, 0.3, 0.48, 1)
-skirt_depth = 24.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/Shelf" unique_id=1913105956]
-shape = SubResource("RectShelf")
-
-[node name="NarrowA" type="StaticBody2D" parent="Islands" unique_id=661107524]
-position = Vector2(4520, 10)
-script = ExtResource("2_island")
-grass_color = Color(0.76, 0.62, 0.36, 1)
-grass_lit_color = Color(0.93, 0.8, 0.55, 1)
-dirt_color = Color(0.38, 0.24, 0.3, 1)
-dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
-dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/NarrowA" unique_id=948682340]
-shape = SubResource("RectNarrowA")
-
-[node name="NarrowB" type="StaticBody2D" parent="Islands" unique_id=2077687835]
-position = Vector2(4930, -15)
-script = ExtResource("2_island")
-grass_color = Color(0.76, 0.62, 0.36, 1)
-grass_lit_color = Color(0.93, 0.8, 0.55, 1)
-dirt_color = Color(0.38, 0.24, 0.3, 1)
-dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
-dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/NarrowB" unique_id=312443778]
-shape = SubResource("RectNarrowB")
-
-[node name="ExitIsland" type="StaticBody2D" parent="Islands" unique_id=568461412]
-position = Vector2(5360, -55)
-script = ExtResource("2_island")
-grass_color = Color(0.76, 0.62, 0.36, 1)
-grass_lit_color = Color(0.93, 0.8, 0.55, 1)
-dirt_color = Color(0.38, 0.24, 0.3, 1)
-dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
-dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
-skirt_depth = 30.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Islands/ExitIsland" unique_id=1803746209]
-shape = SubResource("RectExitIsland")
+[node name="BackgroundBlur" type="Node2D" parent="." unique_id=1778507886]
+scale = Vector2(2.210794, 0.15716045)
+script = ExtResource("20_background_blur")
+blur_radius = 2.5
 
 [node name="Formations" type="Node2D" parent="." unique_id=45317983]
 
-[node name="RockStart" type="StaticBody2D" parent="Formations" unique_id=2033501881]
-position = Vector2(250, 140)
-script = ExtResource("2_island")
-grass_color = Color(0.58, 0.56, 0.62, 1)
-grass_lit_color = Color(0.72, 0.7, 0.78, 1)
-dirt_color = Color(0.32, 0.26, 0.4, 1)
-dirt_dark_color = Color(0.22, 0.18, 0.3, 1)
-dirt_lit_color = Color(0.42, 0.36, 0.52, 1)
-skirt_depth = 10.0
-grass_thickness = 4.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Formations/RockStart" unique_id=113611572]
-shape = SubResource("RectRockStart")
-
 [node name="RockArch" type="StaticBody2D" parent="Formations" unique_id=620367222]
-position = Vector2(1150, -200)
+position = Vector2(1332, 129)
 script = ExtResource("2_island")
 grass_color = Color(0.62, 0.6, 0.7, 1)
 grass_lit_color = Color(0.78, 0.76, 0.86, 1)
@@ -484,131 +371,6 @@ grass_thickness = 4.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Formations/RockColumn" unique_id=744485043]
 shape = SubResource("RectRockC")
 
-[node name="Creatures" type="Node2D" parent="." unique_id=677510906]
-
-[node name="Creature1" parent="Creatures" unique_id=891774234 instance=ExtResource("6_creature")]
-position = Vector2(540, -112)
-patrol_amplitude = 12.0
-patrol_period = 5.5
-bob_amplitude = 4.0
-bob_period = 3.2
-
-[node name="Creature2" parent="Creatures" unique_id=925723999 instance=ExtResource("6_creature")]
-position = Vector2(1140, -118)
-patrol_amplitude = 20.0
-patrol_period = 4.6
-bob_period = 3.0
-phase = 0.35
-
-[node name="Creature4" parent="Creatures" unique_id=329800034 instance=ExtResource("6_creature")]
-position = Vector2(1748, -117)
-patrol_amplitude = 50.0
-bob_amplitude = 10.0
-bob_period = 3.2
-phase = 0.45
-
-[node name="Creature5" parent="Creatures" unique_id=699353279 instance=ExtResource("6_creature")]
-position = Vector2(2107, -159)
-patrol_amplitude = 40.0
-patrol_period = 3.4
-bob_amplitude = 10.0
-bob_period = 2.4
-phase = 0.6
-
-[node name="Creature6" parent="Creatures" unique_id=2104835260 instance=ExtResource("6_creature")]
-position = Vector2(3108, -186)
-patrol_amplitude = 14.0
-patrol_period = 5.0
-bob_amplitude = 22.0
-bob_period = 3.4
-phase = 0.2
-
-[node name="Creature7" parent="Creatures" unique_id=924235109 instance=ExtResource("6_creature")]
-position = Vector2(3580, -108)
-patrol_amplitude = 30.0
-patrol_period = 3.4
-bob_amplitude = 12.0
-bob_period = 2.6
-phase = 0.5
-
-[node name="Creature8" parent="Creatures" unique_id=192994775 instance=ExtResource("6_creature")]
-position = Vector2(3950, -78)
-patrol_amplitude = 20.0
-patrol_period = 3.2
-bob_amplitude = 14.0
-phase = 0.3
-
-[node name="Creature9" parent="Creatures" unique_id=1563624063 instance=ExtResource("6_creature")]
-position = Vector2(4305, -111)
-patrol_amplitude = 20.0
-patrol_period = 4.2
-bob_amplitude = 12.0
-bob_period = 3.0
-phase = 0.65
-
-[node name="Creature10" parent="Creatures" unique_id=1910211895 instance=ExtResource("6_creature")]
-position = Vector2(4737, -138)
-patrol_amplitude = 32.0
-patrol_period = 3.8
-bob_period = 2.8
-phase = 0.2
-
-[node name="Creature11" parent="Creatures" unique_id=1491831960 instance=ExtResource("6_creature")]
-position = Vector2(5131, -153)
-patrol_amplitude = 28.0
-patrol_period = 3.2
-bob_amplitude = 10.0
-bob_period = 2.4
-phase = 0.5
-
-[node name="EntrancePortal" type="Node2D" parent="." unique_id=561447308]
-z_index = 1
-position = Vector2(100, 0)
-script = ExtResource("3_portal")
-radii = Vector2(28, 38)
-spin_speed = 1.2
-
-[node name="PortalArtwork" type="AnimatedSprite2D" parent="EntrancePortal" unique_id=1790214483]
-position = Vector2(0, -58.5)
-scale = Vector2(0.75, 0.75)
-texture_filter = 1
-texture_repeat = 0
-sprite_frames = SubResource("EntryPortalFrames")
-animation = &"idle"
-autoplay = &"idle"
-playing = true
-flip_h = false
-
-[node name="ExitPortal" type="Node2D" parent="." unique_id=1074482002]
-z_index = 1
-position = Vector2(5360, -75)
-script = ExtResource("3_portal")
-radii = Vector2(38, 50)
-outer_color = Color(0.72, 0.3, 0.08, 1)
-mid_color = Color(1, 0.54, 0.14, 1)
-inner_color = Color(1, 0.76, 0.36, 1)
-core_color = Color(1, 0.96, 0.82, 1)
-spark_color = Color(1, 0.88, 0.62, 1)
-spin_speed = 1.9
-pulse_speed = 2.8
-
-[node name="PortalArtwork" type="AnimatedSprite2D" parent="ExitPortal" unique_id=1415316828]
-position = Vector2(0, -72)
-scale = Vector2(0.75, 0.75)
-texture_filter = 1
-texture_repeat = 0
-sprite_frames = SubResource("ExitPortalFrames")
-animation = &"idle"
-autoplay = &"idle"
-playing = true
-flip_h = false
-
-[node name="Area2D" type="Area2D" parent="ExitPortal" unique_id=1851991694]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitPortal/Area2D" unique_id=1194881242]
-position = Vector2(0, -48)
-shape = SubResource("RectExitTrigger")
-
 [node name="DeathPlane" type="Area2D" parent="." unique_id=226928127]
 position = Vector2(2700, 175)
 
@@ -616,8 +378,8 @@ position = Vector2(2700, 175)
 shape = SubResource("RectDeathPlane")
 
 [node name="GrappleTutorialSign" type="Node2D" parent="." unique_id=1549187665]
+visible = false
 z_index = -5
-texture_filter = 1
 position = Vector2(295.265, -65.99)
 scale = Vector2(0.395, 0.395)
 script = ExtResource("7_tutorial")
@@ -639,6 +401,7 @@ theme_override_fonts/font = ExtResource("10_tutorial_font")
 theme_override_font_sizes/font_size = 15
 text = "YOUR FIRST GRAPPLE"
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="Control" type="Label" parent="GrappleTutorialSign" unique_id=1410038493]
 texture_filter = 2
@@ -653,6 +416,7 @@ theme_override_fonts/font = ExtResource("10_tutorial_font")
 theme_override_font_sizes/font_size = 13
 text = "E — HOLD TO GRAPPLE"
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="Message" type="Label" parent="GrappleTutorialSign" unique_id=1774202934]
 texture_filter = 2
@@ -668,6 +432,7 @@ theme_override_font_sizes/font_size = 12
 text = "Grab a nearby Sky Skimmer and swing
 across the sky."
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="ReleaseMessage" type="Label" parent="GrappleTutorialSign" unique_id=827088776]
 texture_filter = 2
@@ -683,6 +448,7 @@ theme_override_font_sizes/font_size = 11
 text = "Release to let go and keep
 your momentum."
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="Player" parent="." unique_id=488134938 instance=ExtResource("5_player")]
 position = Vector2(100, 0)
@@ -691,22 +457,20 @@ position = Vector2(100, 0)
 layer = 5
 
 [node name="CollectiblesPanel" type="TextureRect" parent="HudLayer" unique_id=1847222716]
+texture_filter = 1
+texture_repeat = 1
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 264.0
 offset_bottom = 84.0
 mouse_filter = 2
-texture_filter = 1
-texture_repeat = 1
 texture = ExtResource("17_hud_collectibles")
 
 [node name="Counters" type="HBoxContainer" parent="HudLayer/CollectiblesPanel" unique_id=1337907203]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 0.0
 offset_top = -5.0
-offset_right = 0.0
 offset_bottom = -5.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -720,7 +484,7 @@ size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="CoinWellSpacer" type="Control" parent="HudLayer/CollectiblesPanel/Counters/CoinCounter"]
+[node name="CoinWellSpacer" type="Control" parent="HudLayer/CollectiblesPanel/Counters/CoinCounter" unique_id=2014173094]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 mouse_filter = 2
@@ -728,14 +492,11 @@ mouse_filter = 2
 [node name="CoinCount" type="Label" parent="HudLayer/CollectiblesPanel/Counters/CoinCounter" unique_id=2130491095]
 custom_minimum_size = Vector2(74, 76)
 layout_mode = 2
-size_flags_horizontal = 1
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.98, 0.92, 0.78, 1)
 theme_override_font_sizes/font_size = 11
 text = "× 000"
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 0
 
 [node name="SpecialCounter" type="HBoxContainer" parent="HudLayer/CollectiblesPanel/Counters" unique_id=514792292]
 custom_minimum_size = Vector2(128, 76)
@@ -744,7 +505,7 @@ size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="SpecialWellSpacer" type="Control" parent="HudLayer/CollectiblesPanel/Counters/SpecialCounter"]
+[node name="SpecialWellSpacer" type="Control" parent="HudLayer/CollectiblesPanel/Counters/SpecialCounter" unique_id=223171905]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 mouse_filter = 2
@@ -752,14 +513,11 @@ mouse_filter = 2
 [node name="SpecialCoinCount" type="Label" parent="HudLayer/CollectiblesPanel/Counters/SpecialCounter" unique_id=499358832]
 custom_minimum_size = Vector2(74, 76)
 layout_mode = 2
-size_flags_horizontal = 1
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.98, 0.92, 0.78, 1)
 theme_override_font_sizes/font_size = 11
 text = "× 000"
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 0
 
 [node name="Hint" type="Label" parent="HudLayer" unique_id=515431898]
 modulate = Color(1, 0.93, 0.78, 0.8)
@@ -820,74 +578,446 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Play again   ( R )"
 
-[node name="Coin" parent="." unique_id=709148945 instance=ExtResource("8_dwcxj")]
+[node name="Monedas2" type="Node2D" parent="." unique_id=568177115]
+
+[node name="Coin" parent="Monedas2" unique_id=709148945 instance=ExtResource("8_dwcxj")]
 position = Vector2(663, -12)
 
-[node name="Coin2" parent="." unique_id=1241872642 instance=ExtResource("8_dwcxj")]
+[node name="Coin2" parent="Monedas2" unique_id=1241872642 instance=ExtResource("8_dwcxj")]
 position = Vector2(489, 0)
 
-[node name="Coin3" parent="." unique_id=1686990710 instance=ExtResource("8_dwcxj")]
+[node name="Coin3" parent="Monedas2" unique_id=1686990710 instance=ExtResource("8_dwcxj")]
 position = Vector2(356, -12)
 
-[node name="Coin4" parent="." unique_id=713224064 instance=ExtResource("8_dwcxj")]
+[node name="Coin4" parent="Monedas2" unique_id=713224064 instance=ExtResource("8_dwcxj")]
 position = Vector2(663, -12)
 
-[node name="Coin5" parent="." unique_id=809517924 instance=ExtResource("8_dwcxj")]
+[node name="Coin5" parent="Monedas2" unique_id=809517924 instance=ExtResource("8_dwcxj")]
 position = Vector2(934, -12)
 
-[node name="Coin6" parent="." unique_id=267057846 instance=ExtResource("8_dwcxj")]
+[node name="Coin6" parent="Monedas2" unique_id=267057846 instance=ExtResource("8_dwcxj")]
 position = Vector2(1246, -107)
 
-[node name="SpecialCoin" parent="." unique_id=880627499 instance=ExtResource("9_c83vx")]
-position = Vector2(1149, -237)
+[node name="SpecialCoin" parent="Monedas2" unique_id=880627499 instance=ExtResource("9_c83vx")]
+position = Vector2(1331, 92)
 
-[node name="Coin7" parent="." unique_id=1571579255 instance=ExtResource("8_dwcxj")]
+[node name="Coin7" parent="Monedas2" unique_id=1571579255 instance=ExtResource("8_dwcxj")]
 position = Vector2(1372, -34)
 
-[node name="Coin8" parent="." unique_id=1270231350 instance=ExtResource("8_dwcxj")]
+[node name="Coin8" parent="Monedas2" unique_id=1270231350 instance=ExtResource("8_dwcxj")]
 position = Vector2(1563, -33)
 
-[node name="Coin9" parent="." unique_id=1925771718 instance=ExtResource("8_dwcxj")]
+[node name="Coin9" parent="Monedas2" unique_id=1925771718 instance=ExtResource("8_dwcxj")]
 position = Vector2(1748, -17)
 
-[node name="Coin10" parent="." unique_id=982139543 instance=ExtResource("8_dwcxj")]
+[node name="Coin10" parent="Monedas2" unique_id=982139543 instance=ExtResource("8_dwcxj")]
 position = Vector2(1947, -31)
 
-[node name="SpecialCoin2" parent="." unique_id=116108277 instance=ExtResource("9_c83vx")]
+[node name="SpecialCoin2" parent="Monedas2" unique_id=116108277 instance=ExtResource("9_c83vx")]
 position = Vector2(2100, -253)
 
-[node name="Coin11" parent="." unique_id=1875455887 instance=ExtResource("8_dwcxj")]
+[node name="Coin11" parent="Monedas2" unique_id=1875455887 instance=ExtResource("8_dwcxj")]
 position = Vector2(2234, -31)
 
-[node name="Coin12" parent="." unique_id=1412699214 instance=ExtResource("8_dwcxj")]
+[node name="Coin12" parent="Monedas2" unique_id=1412699214 instance=ExtResource("8_dwcxj")]
 position = Vector2(2426, -32)
 
-[node name="Coin13" parent="." unique_id=445564213 instance=ExtResource("8_dwcxj")]
+[node name="Coin13" parent="Monedas2" unique_id=445564213 instance=ExtResource("8_dwcxj")]
 position = Vector2(2573, -15)
 
-[node name="Coin14" parent="." unique_id=555414989 instance=ExtResource("8_dwcxj")]
+[node name="Coin14" parent="Monedas2" unique_id=555414989 instance=ExtResource("8_dwcxj")]
 position = Vector2(2872, -64)
 
-[node name="Coin15" parent="." unique_id=528922228 instance=ExtResource("8_dwcxj")]
+[node name="Coin15" parent="Monedas2" unique_id=528922228 instance=ExtResource("8_dwcxj")]
 position = Vector2(3352, -62)
 
-[node name="Coin16" parent="." unique_id=1829129252 instance=ExtResource("8_dwcxj")]
+[node name="Coin16" parent="Monedas2" unique_id=1829129252 instance=ExtResource("8_dwcxj")]
 position = Vector2(3102, -49)
 
-[node name="Coin17" parent="." unique_id=1280689777 instance=ExtResource("8_dwcxj")]
+[node name="Coin17" parent="Monedas2" unique_id=1280689777 instance=ExtResource("8_dwcxj")]
 position = Vector2(3719, 28)
 
-[node name="SpecialCoin3" parent="." unique_id=1551101725 instance=ExtResource("9_c83vx")]
+[node name="SpecialCoin3" parent="Monedas2" unique_id=1551101725 instance=ExtResource("9_c83vx")]
 position = Vector2(4030, -175)
 
-[node name="Coin18" parent="." unique_id=546393134 instance=ExtResource("8_dwcxj")]
+[node name="Coin18" parent="Monedas2" unique_id=546393134 instance=ExtResource("8_dwcxj")]
 position = Vector2(4083, 8)
 
-[node name="Coin19" parent="." unique_id=339049695 instance=ExtResource("8_dwcxj")]
+[node name="Coin19" parent="Monedas2" unique_id=339049695 instance=ExtResource("8_dwcxj")]
 position = Vector2(4405, -41)
 
-[node name="Coin20" parent="." unique_id=1526992086 instance=ExtResource("8_dwcxj")]
+[node name="Coin20" parent="Monedas2" unique_id=1526992086 instance=ExtResource("8_dwcxj")]
 position = Vector2(4562, -22)
 
-[node name="Coin21" parent="." unique_id=1447132641 instance=ExtResource("8_dwcxj")]
+[node name="Coin21" parent="Monedas2" unique_id=1447132641 instance=ExtResource("8_dwcxj")]
 position = Vector2(4931, -47)
+
+[node name="Pajaros" type="Node2D" parent="." unique_id=1522817015]
+
+[node name="Creatures" type="Node2D" parent="Pajaros" unique_id=677510906]
+
+[node name="Creature1" parent="Pajaros/Creatures" unique_id=891774234 instance=ExtResource("6_creature")]
+position = Vector2(540, -112)
+patrol_amplitude = 12.0
+patrol_period = 5.5
+bob_amplitude = 4.0
+bob_period = 3.2
+
+[node name="Creature2" parent="Pajaros/Creatures" unique_id=925723999 instance=ExtResource("6_creature")]
+position = Vector2(1140, -118)
+patrol_amplitude = 20.0
+patrol_period = 4.6
+bob_period = 3.0
+phase = 0.35
+
+[node name="Creature4" parent="Pajaros/Creatures" unique_id=329800034 instance=ExtResource("6_creature")]
+position = Vector2(1748, -117)
+patrol_amplitude = 50.0
+bob_amplitude = 10.0
+bob_period = 3.2
+phase = 0.45
+
+[node name="Creature5" parent="Pajaros/Creatures" unique_id=699353279 instance=ExtResource("6_creature")]
+position = Vector2(2107, -159)
+patrol_amplitude = 40.0
+patrol_period = 3.4
+bob_amplitude = 10.0
+bob_period = 2.4
+phase = 0.6
+
+[node name="Creature6" parent="Pajaros/Creatures" unique_id=2104835260 instance=ExtResource("6_creature")]
+position = Vector2(3108, -186)
+patrol_amplitude = 14.0
+patrol_period = 5.0
+bob_amplitude = 22.0
+bob_period = 3.4
+phase = 0.2
+
+[node name="Creature7" parent="Pajaros/Creatures" unique_id=924235109 instance=ExtResource("6_creature")]
+position = Vector2(3580, -108)
+patrol_amplitude = 30.0
+patrol_period = 3.4
+bob_amplitude = 12.0
+bob_period = 2.6
+phase = 0.5
+
+[node name="Creature8" parent="Pajaros/Creatures" unique_id=192994775 instance=ExtResource("6_creature")]
+position = Vector2(3950, -78)
+patrol_amplitude = 20.0
+patrol_period = 3.2
+bob_amplitude = 14.0
+phase = 0.3
+
+[node name="Creature9" parent="Pajaros/Creatures" unique_id=1563624063 instance=ExtResource("6_creature")]
+position = Vector2(4305, -111)
+patrol_amplitude = 20.0
+patrol_period = 4.2
+bob_amplitude = 12.0
+bob_period = 3.0
+phase = 0.65
+
+[node name="Creature10" parent="Pajaros/Creatures" unique_id=1910211895 instance=ExtResource("6_creature")]
+position = Vector2(4737, -138)
+patrol_amplitude = 32.0
+patrol_period = 3.8
+bob_period = 2.8
+phase = 0.2
+
+[node name="Creature11" parent="Pajaros/Creatures" unique_id=1491831960 instance=ExtResource("6_creature")]
+position = Vector2(5131, -153)
+patrol_amplitude = 28.0
+patrol_period = 3.2
+bob_amplitude = 10.0
+bob_period = 2.4
+phase = 0.5
+
+[node name="Suelo" type="Node2D" parent="." unique_id=678937575]
+
+[node name="Islands" type="Node2D" parent="Suelo" unique_id=1501210538]
+
+[node name="StartHaven" type="StaticBody2D" parent="Suelo/Islands" unique_id=1885336030]
+position = Vector2(210, 20)
+script = ExtResource("2_island")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/StartHaven" unique_id=792913228]
+shape = SubResource("RectStart")
+
+[node name="Meadow" type="StaticBody2D" parent="Suelo/Islands" unique_id=1458546077]
+position = Vector2(790, 20)
+script = ExtResource("2_island")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/Meadow" unique_id=1637623048]
+shape = SubResource("RectMeadow")
+
+[node name="Terrace" type="StaticBody2D" parent="Suelo/Islands" unique_id=1935923185]
+position = Vector2(1340, -2)
+script = ExtResource("2_island")
+grass_color = Color(0.58, 0.56, 0.62, 1)
+grass_lit_color = Color(0.74, 0.72, 0.8, 1)
+dirt_color = Color(0.34, 0.28, 0.4, 1)
+dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
+dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
+skirt_depth = 14.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/Terrace" unique_id=1213596853]
+shape = SubResource("RectTerrace")
+
+[node name="Terrace2" type="StaticBody2D" parent="Suelo/Islands" unique_id=1446171443]
+position = Vector2(1507.0001, 132)
+scale = Vector2(0.50710326, 1.2702549)
+script = ExtResource("2_island")
+grass_color = Color(0.58, 0.56, 0.62, 1)
+grass_lit_color = Color(0.74, 0.72, 0.8, 1)
+dirt_color = Color(0.34, 0.28, 0.4, 1)
+dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
+dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
+skirt_depth = 14.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/Terrace2" unique_id=775794116]
+shape = SubResource("RectTerrace")
+
+[node name="Terrace3" type="StaticBody2D" parent="Suelo/Islands" unique_id=1973534119]
+position = Vector2(1645, 100)
+scale = Vector2(0.50710326, 1.2702549)
+script = ExtResource("2_island")
+grass_color = Color(0.58, 0.56, 0.62, 1)
+grass_lit_color = Color(0.74, 0.72, 0.8, 1)
+dirt_color = Color(0.34, 0.28, 0.4, 1)
+dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
+dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
+skirt_depth = 14.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/Terrace3" unique_id=1389736696]
+shape = SubResource("RectTerrace")
+
+[node name="Terrace4" type="StaticBody2D" parent="Suelo/Islands" unique_id=706839507]
+position = Vector2(1781, 57)
+scale = Vector2(0.50710326, 1.2702549)
+script = ExtResource("2_island")
+grass_color = Color(0.58, 0.56, 0.62, 1)
+grass_lit_color = Color(0.74, 0.72, 0.8, 1)
+dirt_color = Color(0.34, 0.28, 0.4, 1)
+dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
+dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
+skirt_depth = 14.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/Terrace4" unique_id=67922560]
+shape = SubResource("RectTerrace")
+
+[node name="Aerie" type="StaticBody2D" parent="Suelo/Islands" unique_id=544873176]
+position = Vector2(1730, -20)
+script = ExtResource("2_island")
+grass_color = Color(0.66, 0.7, 0.34, 1)
+grass_lit_color = Color(0.85, 0.87, 0.52, 1)
+dirt_color = Color(0.4, 0.26, 0.36, 1)
+dirt_dark_color = Color(0.29, 0.18, 0.27, 1)
+dirt_lit_color = Color(0.51, 0.35, 0.45, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/Aerie" unique_id=399531046]
+position = Vector2(-166.5, 19)
+shape = SubResource("RectAerie")
+
+[node name="Perch" type="StaticBody2D" parent="Suelo/Islands" unique_id=2047437917]
+position = Vector2(2140, -5)
+script = ExtResource("2_island")
+grass_color = Color(0.66, 0.7, 0.34, 1)
+grass_lit_color = Color(0.85, 0.87, 0.52, 1)
+dirt_color = Color(0.4, 0.26, 0.36, 1)
+dirt_dark_color = Color(0.29, 0.18, 0.27, 1)
+dirt_lit_color = Color(0.51, 0.35, 0.45, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/Perch" unique_id=1258218521]
+position = Vector2(-193, 6)
+shape = SubResource("RectPerch")
+
+[node name="RestLedge" type="StaticBody2D" parent="Suelo/Islands" unique_id=623468902]
+position = Vector2(2600, 35)
+script = ExtResource("2_island")
+grass_color = Color(0.66, 0.7, 0.34, 1)
+grass_lit_color = Color(0.85, 0.87, 0.52, 1)
+dirt_color = Color(0.4, 0.26, 0.36, 1)
+dirt_dark_color = Color(0.29, 0.18, 0.27, 1)
+dirt_lit_color = Color(0.51, 0.35, 0.45, 1)
+skirt_depth = 26.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/RestLedge" unique_id=1817775212]
+position = Vector2(-273, -35)
+shape = SubResource("RectRestLedge")
+
+[node name="StepOne" type="StaticBody2D" parent="Suelo/Islands" unique_id=48782975]
+position = Vector2(2572, 17)
+script = ExtResource("2_island")
+grass_color = Color(0.58, 0.56, 0.62, 1)
+grass_lit_color = Color(0.74, 0.72, 0.8, 1)
+dirt_color = Color(0.34, 0.28, 0.4, 1)
+dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
+dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
+skirt_depth = 12.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/StepOne" unique_id=1167519754]
+shape = SubResource("RectStepOne")
+
+[node name="StepTwo" type="StaticBody2D" parent="Suelo/Islands" unique_id=1973340256]
+position = Vector2(2722, -8)
+script = ExtResource("2_island")
+grass_color = Color(0.58, 0.56, 0.62, 1)
+grass_lit_color = Color(0.74, 0.72, 0.8, 1)
+dirt_color = Color(0.34, 0.28, 0.4, 1)
+dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
+dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
+skirt_depth = 12.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/StepTwo" unique_id=1370235783]
+shape = SubResource("RectStepTwo")
+
+[node name="StepThree" type="StaticBody2D" parent="Suelo/Islands" unique_id=505333369]
+position = Vector2(2872, -33)
+script = ExtResource("2_island")
+grass_color = Color(0.58, 0.56, 0.62, 1)
+grass_lit_color = Color(0.74, 0.72, 0.8, 1)
+dirt_color = Color(0.34, 0.28, 0.4, 1)
+dirt_dark_color = Color(0.24, 0.2, 0.3, 1)
+dirt_lit_color = Color(0.44, 0.38, 0.52, 1)
+skirt_depth = 12.0
+grass_thickness = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/StepThree" unique_id=857585837]
+shape = SubResource("RectStepThree")
+
+[node name="Nook" type="StaticBody2D" parent="Suelo/Islands" unique_id=197995791]
+position = Vector2(3390, -15)
+script = ExtResource("2_island")
+grass_color = Color(0.44, 0.64, 0.48, 1)
+grass_lit_color = Color(0.62, 0.82, 0.62, 1)
+dirt_color = Color(0.28, 0.22, 0.38, 1)
+dirt_dark_color = Color(0.2, 0.15, 0.28, 1)
+dirt_lit_color = Color(0.37, 0.3, 0.48, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/Nook" unique_id=1303251704]
+position = Vector2(-39, -15)
+shape = SubResource("RectNook")
+
+[node name="LowRest" type="StaticBody2D" parent="Suelo/Islands" unique_id=1836231762]
+position = Vector2(3720, 60)
+script = ExtResource("2_island")
+grass_color = Color(0.44, 0.64, 0.48, 1)
+grass_lit_color = Color(0.62, 0.82, 0.62, 1)
+dirt_color = Color(0.28, 0.22, 0.38, 1)
+dirt_dark_color = Color(0.2, 0.15, 0.28, 1)
+dirt_lit_color = Color(0.37, 0.3, 0.48, 1)
+skirt_depth = 40.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/LowRest" unique_id=12936866]
+shape = SubResource("RectLowRest")
+
+[node name="Shelf" type="StaticBody2D" parent="Suelo/Islands" unique_id=790284446]
+position = Vector2(4080, 40)
+script = ExtResource("2_island")
+grass_color = Color(0.44, 0.64, 0.48, 1)
+grass_lit_color = Color(0.62, 0.82, 0.62, 1)
+dirt_color = Color(0.28, 0.22, 0.38, 1)
+dirt_dark_color = Color(0.2, 0.15, 0.28, 1)
+dirt_lit_color = Color(0.37, 0.3, 0.48, 1)
+skirt_depth = 24.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/Shelf" unique_id=1913105956]
+shape = SubResource("RectShelf")
+
+[node name="NarrowA" type="StaticBody2D" parent="Suelo/Islands" unique_id=661107524]
+position = Vector2(4520, 10)
+script = ExtResource("2_island")
+grass_color = Color(0.76, 0.62, 0.36, 1)
+grass_lit_color = Color(0.93, 0.8, 0.55, 1)
+dirt_color = Color(0.38, 0.24, 0.3, 1)
+dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
+dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/NarrowA" unique_id=948682340]
+shape = SubResource("RectNarrowA")
+
+[node name="NarrowB" type="StaticBody2D" parent="Suelo/Islands" unique_id=2077687835]
+position = Vector2(4930, -15)
+script = ExtResource("2_island")
+grass_color = Color(0.76, 0.62, 0.36, 1)
+grass_lit_color = Color(0.93, 0.8, 0.55, 1)
+dirt_color = Color(0.38, 0.24, 0.3, 1)
+dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
+dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/NarrowB" unique_id=312443778]
+shape = SubResource("RectNarrowB")
+
+[node name="ExitIsland" type="StaticBody2D" parent="Suelo/Islands" unique_id=568461412]
+position = Vector2(5360, -55)
+script = ExtResource("2_island")
+grass_color = Color(0.76, 0.62, 0.36, 1)
+grass_lit_color = Color(0.93, 0.8, 0.55, 1)
+dirt_color = Color(0.38, 0.24, 0.3, 1)
+dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
+dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
+skirt_depth = 30.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/ExitIsland" unique_id=1803746209]
+shape = SubResource("RectExitIsland")
+
+[node name="Portales" type="Node2D" parent="." unique_id=1900045426]
+
+[node name="EntrancePortal" type="Node2D" parent="Portales" unique_id=561447308]
+z_index = 1
+position = Vector2(100, 0)
+script = ExtResource("3_portal")
+radii = Vector2(28, 38)
+spin_speed = 1.2
+
+[node name="PortalArtwork" type="AnimatedSprite2D" parent="Portales/EntrancePortal" unique_id=1790214483]
+texture_filter = 1
+position = Vector2(0, -58.5)
+scale = Vector2(0.75, 0.75)
+sprite_frames = SubResource("EntryPortalFrames")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="PortalFrame" type="Sprite2D" parent="Portales/EntrancePortal" unique_id=1062091771]
+texture_filter = 1
+position = Vector2(0, -58.5)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("26_portal_entry_frame")
+
+[node name="ExitPortal" type="Node2D" parent="Portales" unique_id=1074482002]
+z_index = 1
+position = Vector2(5360, -75)
+script = ExtResource("3_portal")
+radii = Vector2(38, 50)
+outer_color = Color(0.72, 0.3, 0.08, 1)
+mid_color = Color(1, 0.54, 0.14, 1)
+inner_color = Color(1, 0.76, 0.36, 1)
+core_color = Color(1, 0.96, 0.82, 1)
+spark_color = Color(1, 0.88, 0.62, 1)
+spin_speed = 1.9
+pulse_speed = 2.8
+
+[node name="PortalArtwork" type="AnimatedSprite2D" parent="Portales/ExitPortal" unique_id=1415316828]
+texture_filter = 1
+position = Vector2(0, -72)
+scale = Vector2(1.0300527, 1.1578616)
+sprite_frames = SubResource("ExitPortalFrames")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="PortalFrame" type="Sprite2D" parent="Portales/ExitPortal" unique_id=1561382555]
+texture_filter = 1
+position = Vector2(0, -72)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("27_portal_exit_frame")
+
+[node name="Area2D" type="Area2D" parent="Portales/ExitPortal" unique_id=1851991694]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Portales/ExitPortal/Area2D" unique_id=1194881242]
+position = Vector2(0, -48)
+shape = SubResource("RectExitTrigger")

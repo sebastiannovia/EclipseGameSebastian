@@ -65,7 +65,7 @@ enum State { PLAYING, WON }
 @onready var _player: Player = get_node("Player") as Player
 @onready var _camera: Camera2D = get_node("Player/Camera2D") as Camera2D
 @onready var _death_plane: Area2D = get_node("DeathPlane") as Area2D
-@onready var _exit_area: Area2D = get_node("ExitPortal/Area2D") as Area2D
+@onready var _exit_area: Area2D = get_node("Portales/ExitPortal/Area2D") as Area2D
 @onready var _victory: CanvasLayer = get_node("VictoryUI") as CanvasLayer
 @onready var _time_label: Label = get_node("VictoryUI/Center/Box/TimeLabel") as Label
 @onready var _restart_button: Button = get_node("VictoryUI/Center/Box/RestartButton") as Button
