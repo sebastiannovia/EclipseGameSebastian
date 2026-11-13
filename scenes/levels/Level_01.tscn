@@ -613,6 +613,9 @@ position = Vector2(1748, -17)
 [node name="Coin10" parent="Monedas2" unique_id=982139543 instance=ExtResource("8_dwcxj")]
 position = Vector2(1947, -31)
 
+[node name="Coin22" parent="Monedas2" unique_id=1358741000 instance=ExtResource("8_dwcxj")]
+position = Vector2(4523, -176)
+
 [node name="SpecialCoin2" parent="Monedas2" unique_id=116108277 instance=ExtResource("9_c83vx")]
 position = Vector2(2100, -253)
 
@@ -640,6 +643,9 @@ position = Vector2(3719, 28)
 [node name="SpecialCoin3" parent="Monedas2" unique_id=1551101725 instance=ExtResource("9_c83vx")]
 position = Vector2(4030, -175)
 
+[node name="SpecialCoin4" parent="Monedas2" unique_id=749738226 instance=ExtResource("9_c83vx")]
+position = Vector2(4793, -259)
+
 [node name="Coin18" parent="Monedas2" unique_id=546393134 instance=ExtResource("8_dwcxj")]
 position = Vector2(4083, 8)
 
@@ -651,6 +657,9 @@ position = Vector2(4562, -22)
 
 [node name="Coin21" parent="Monedas2" unique_id=1447132641 instance=ExtResource("8_dwcxj")]
 position = Vector2(4931, -47)
+
+[node name="Coin23" parent="Monedas2" unique_id=1915401928 instance=ExtResource("8_dwcxj")]
+position = Vector2(4656, -220)
 
 [node name="Pajaros" type="Node2D" parent="." unique_id=1522817015]
 
@@ -725,6 +734,22 @@ phase = 0.2
 
 [node name="Creature11" parent="Pajaros/Creatures" unique_id=1491831960 instance=ExtResource("6_creature")]
 position = Vector2(5131, -153)
+patrol_amplitude = 28.0
+patrol_period = 3.2
+bob_amplitude = 10.0
+bob_period = 2.4
+phase = 0.5
+
+[node name="Creature12" parent="Pajaros/Creatures" unique_id=2081653443 instance=ExtResource("6_creature")]
+position = Vector2(4987, -333)
+patrol_amplitude = 28.0
+patrol_period = 3.2
+bob_amplitude = 10.0
+bob_period = 2.4
+phase = 0.5
+
+[node name="Creature13" parent="Pajaros/Creatures" unique_id=221259019 instance=ExtResource("6_creature")]
+position = Vector2(5195, -341)
 patrol_amplitude = 28.0
 patrol_period = 3.2
 bob_amplitude = 10.0
@@ -939,6 +964,42 @@ dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
 dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/NarrowA" unique_id=948682340]
+shape = SubResource("RectNarrowA")
+
+[node name="NarrowA2" type="StaticBody2D" parent="Suelo/Islands" unique_id=1690239898]
+position = Vector2(4521, -140)
+script = ExtResource("2_island")
+grass_color = Color(0.76, 0.62, 0.36, 1)
+grass_lit_color = Color(0.93, 0.8, 0.55, 1)
+dirt_color = Color(0.38, 0.24, 0.3, 1)
+dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
+dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/NarrowA2" unique_id=677170920]
+shape = SubResource("RectNarrowA")
+
+[node name="NarrowA3" type="StaticBody2D" parent="Suelo/Islands" unique_id=1378472611]
+position = Vector2(4653, -185)
+script = ExtResource("2_island")
+grass_color = Color(0.76, 0.62, 0.36, 1)
+grass_lit_color = Color(0.93, 0.8, 0.55, 1)
+dirt_color = Color(0.38, 0.24, 0.3, 1)
+dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
+dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/NarrowA3" unique_id=637283171]
+shape = SubResource("RectNarrowA")
+
+[node name="NarrowA4" type="StaticBody2D" parent="Suelo/Islands" unique_id=1501409827]
+position = Vector2(4793, -222)
+script = ExtResource("2_island")
+grass_color = Color(0.76, 0.62, 0.36, 1)
+grass_lit_color = Color(0.93, 0.8, 0.55, 1)
+dirt_color = Color(0.38, 0.24, 0.3, 1)
+dirt_dark_color = Color(0.27, 0.16, 0.22, 1)
+dirt_lit_color = Color(0.49, 0.33, 0.39, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo/Islands/NarrowA4" unique_id=1437304817]
 shape = SubResource("RectNarrowA")
 
 [node name="NarrowB" type="StaticBody2D" parent="Suelo/Islands" unique_id=2077687835]
